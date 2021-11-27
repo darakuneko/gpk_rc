@@ -1,7 +1,25 @@
 # GPK RC
-QMK Remote Controller Application
+## QMK Remote Controller Application
 
-QMK compatible version is 0.13.15
+- Automatic layer switching
+- Write time to OLED
+- This Applcation use custom [qmk_rc](https://github.com/mmalecki/qmk_rc)
+- [custom quantum/via](https://github.com/darakuneko/keyboard/tree/main/qmk/num_num_strawberry/quantum) QMK compatible version is 0.13.15
 
-This Applcation use custom [qmk_rc](https://github.com/mmalecki/qmk_rc)
+## Build
 
+Windows
+
+```sh
+ npm run dist:win --openssl_fips=X
+```
+
+linux
+
+```sh
+ npm run dist:linux
+```
+
+## License
+
+MIT

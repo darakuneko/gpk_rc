@@ -1,4 +1,5 @@
-const {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage} = require("electron")
+const {app, BrowserWindow, ipcMain, Tray, Menu} = require("electron")
+const activeWindows = require('active-win')
 
 let mainWindow
 let tray = null
@@ -13,7 +14,7 @@ const createWindow = () => {
       contextIsolation: true,
       preload: __dirname + '/preload.js',
     },
-    //show: false
+    show: false
   })
 
   mainWindow.loadURL(`file://${__dirname}/public/index.html`)
@@ -35,7 +36,7 @@ const createWindow = () => {
 
 const doubleBoot = app.requestSingleInstanceLock()
 if(!doubleBoot) app.quit()
-
+app.allowRendererProcessReuse = false
 app.on('ready', () => {
   if(process.platform === 'darwin') app.dock.hide()
   tray = new Tray(`${__dirname}/icons/icon-72x72.${process.platform === 'win32' ? 'ico' : 'png'}`)
@@ -58,7 +59,7 @@ app.on('ready', () => {
   ]))
 
   createWindow()
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 })
 
 app.on('activate', () => {
@@ -71,4 +72,9 @@ ipcMain.on("checkingIsConnect",  (e, data) => {
 
 ipcMain.on("changeActiveWindow",  (e, data) => {
   mainWindow.webContents.send("activeWindow", data)
+})
+
+ipcMain.on("setActiveWindow", async () => {
+  const result = await activeWindows()
+  mainWindow.webContents.send("getActiveWindow", result ? result.owner.name : "")
 })

@@ -2,12 +2,13 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf ./public/build && rm -rf ./build && rm -rf ./dist && npx webpack",
+    "build:win": "del /s /q public\\build && del /s /q build && del /s /q dist && npx webpack",
     "start": "npx webpack && npx electron .",
-    "dist:win": "npm run build && electron-builder --w",
-    "dist:liunx": "npm run build && electron-builder -l"
+    "dist:win": "npm run build:win && electron-builder --w",
+    "dist:linux": "npm run build && electron-builder -l"
   },
   "name": "gpk_cr",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "GPK RC",
   "homepage": "https://github.com/darakuneko",
   "author": {
@@ -15,22 +16,25 @@
     "email": "tvkids@gmail.com"
   },
   "devDependencies": {
-    "electron": "15.3.0",
+    "electron": "^15.3.0",
     "electron-builder": "^22.14.5",
+    "electron-rebuild": "^3.2.5",
     "webpack-cli": "^4.9.1"
   },
   "main": "./index.js",
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "active-win": "^7.6.1",
     "babel-core": "^6.26.3",
     "babel-loader": "7",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "dayjs": "^1.10.7",
-    "electron-active-window": "0.0.6",
     "electron-store": "^8.0.1",
+    "ffi-napi": "^4.0.3",
     "fs": "^0.0.1-security",
+    "iconv": "^3.0.1",
     "node-hid": "^2.1.1",
     "node-loader": "2.0.0",
     "path": "^0.12.7",
@@ -38,6 +42,9 @@
     "react-dom": "^17.0.2",
     "uuid": "^8.3.2",
     "webpack": "^5.64.0"
+  },
+  "resolutions": {
+    "iconv": "^3.0.1" 
   },
   "build": {
     "productName": "GPK RC",
@@ -52,10 +59,11 @@
     ],
     "win": {
       "icon": "build/icons/icon-256x256.ico",
-      "target": "portable"
+      "target": "nsis"
     },
     "linux": {
       "target": [
+        "AppImage",
         "deb"
       ],
       "icon": "icons"

@@ -1,5 +1,4 @@
 const { contextBridge, ipcRenderer} = require("electron")
-const activeWindows = require('electron-active-window')
 const dayjs = require('dayjs')
 const Store = require("electron-store")
 const {start, stop, writeCommand, connect, isOledOn, getKBD} = require(`${__dirname}/qmkrcd`)
@@ -9,7 +8,8 @@ const params = {
     isQmkrcdStart: false,
     lastLayer: 0,
     connect: false,
-    lastWindowClass: "",
+    onWindowName: "",
+    lastWindowName: "",
     dt: ""
 }
 
@@ -26,7 +26,9 @@ const command = {
     getConnectDevice: () =>  store && store.get('devices') ? store.get('devices').find(d => d.priority === 0) : undefined,
     getDevices: () => store ? store.get('devices') : undefined,
     setDevices: (obj) =>  store ? store.set('devices', obj) : undefined,
-    getActiveWindow: async () => await activeWindows().getActiveWindow()
+    setActiveWindow: () => ipcRenderer.send("setActiveWindow"),
+    changeActiveWindow: () => ipcRenderer.send("changeActiveWindow", params.onWindowName),
+    checkingIsConnect: (c) => ipcRenderer.send("checkingIsConnect", c)
 }
 
 process.once('loaded', async () => {
@@ -54,22 +56,21 @@ const qmkrcdStart = (device) => {
 
 const keyboardSendLoop = async () => {
     const device = command.getConnectDevice()
-    const activeWindow = await command.getActiveWindow()
-    const windowClass = activeWindow.windowClass
-    const l = device ? device.layers.find(l => l.name === windowClass) : ""
+    await command.setActiveWindow()
+    const l = device ? device.layers.find(l => l.name === params.onWindowName) : ""
     const currentLayer = l ? l.layer : 0
-    if (params.lastWindowClass !== windowClass) ipcRenderer.send("changeActiveWindow", windowClass)
+    if (params.lastWindowName !== params.onWindowName) await command.changeActiveWindow()
 
     const c = connect()
-    if(params.connect !== c ) ipcRenderer.send("checkingIsConnect", c)
+    if(params.connect !== c ) await command.checkingIsConnect(c)
     params.connect = c
     const isConnectFn = async () => {
-        if (params.lastWindowClass !== windowClass && params.lastLayer !== currentLayer) command.switchLayer(currentLayer)
+        if (params.lastWindowName !== params.onWindowName && params.lastLayer !== currentLayer) command.switchLayer(currentLayer)
         await oledWriteNow(device)
     }
     c ? await isConnectFn() : qmkrcdStart(device)
 
-    params.lastWindowClass = windowClass
+    params.lastWindowName = params.onWindowName
     params.lastLayer = currentLayer
 }
 
@@ -81,3 +82,7 @@ const oledWriteNow = async (device) => {
         params.dt = now
     }
 }
+
+ipcRenderer.on("getActiveWindow",  (e, data) => {
+    if(data) params.onWindowName = data
+})

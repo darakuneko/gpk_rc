@@ -3,7 +3,7 @@ const activeWindows = require('active-win')
 
 let mainWindow
 let tray = null
-
+let timer
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1000,
@@ -13,8 +13,9 @@ const createWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
       preload: __dirname + '/preload.js',
+      backgroundThrottling: false,
     },
-    show: false
+    show: false,
   })
 
   mainWindow.loadURL(`file://${__dirname}/public/index.html`)
@@ -36,7 +37,7 @@ const createWindow = () => {
 
 const doubleBoot = app.requestSingleInstanceLock()
 if(!doubleBoot) app.quit()
-app.allowRendererProcessReuse = false
+
 app.on('ready', () => {
   if(process.platform === 'darwin') app.dock.hide()
   tray = new Tray(`${__dirname}/icons/icon-72x72.${process.platform === 'win32' ? 'ico' : 'png'}`)
@@ -53,21 +54,26 @@ app.on('ready', () => {
       label: 'Exit',
       click:  () => {
         app.isQuiting = true
+        clearInterval(timer)
         app.quit()
       }
     }
   ]))
 
   createWindow()
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 })
 
 app.on('activate', () => {
     if (mainWindow === null) createWindow()
 })
 
-ipcMain.on("checkingIsConnect",  (e, data) => {
-  mainWindow.webContents.send("isConnect", data)
+ipcMain.on("connectSwitchLayer",  (e, data) => {
+  mainWindow.webContents.send("isConnectSwitchLayer", data)
+})
+
+ipcMain.on("connectOledClock",  (e, data) => {
+  mainWindow.webContents.send("isConnectOledClock", data)
 })
 
 ipcMain.on("changeActiveWindow",  (e, data) => {
@@ -77,4 +83,8 @@ ipcMain.on("changeActiveWindow",  (e, data) => {
 ipcMain.on("setActiveWindow", async () => {
   const result = await activeWindows()
   mainWindow.webContents.send("getActiveWindow", result ? result.owner.name : "")
+})
+
+ipcMain.on("setTimer", async (e, data) => {
+  timer = data
 })

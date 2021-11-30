@@ -1,7 +1,7 @@
 import React, {  useEffect, useRef, useState } from 'react'
-import Header from "./renderer/header"
-import Settings from "./renderer/settings"
+import Layer from "./renderer/layer"
 import ActiveWindow from "./renderer/activeWindow"
+import OledClock from "./renderer/oledClock"
 
 import Box from "@material-ui/core/Box"
 import Tabs from "@material-ui/core/Tabs"
@@ -21,29 +21,34 @@ const Content = () => {
 
     useEffect( () => {
         try{
-            setInterval(api.keyboardSendLoop, 500)
+            const timer = setInterval(api.keyboardSendLoop, 300)
+            api.send("setTimer", timer)
         } catch (e) {
-            console.log("error")
+            console.log("error timer")
         }
         api.initStore()
     }, [loadingRef])
 
     useEffect( () => {
-        const connectDevice = api.getConnectDevice()
+        Object.values(api.deviceType).map(type => {
+            const connectDevice = api.getConnectDevice(type)
+            if(connectDevice) state.connectDevice[type] = connectDevice
+        })
         const devices = api.getDevices()
-        if(connectDevice) state.connectDevice = connectDevice
         if(devices) state.devices = devices
         state.init = false
         setState(state)
     }, [])
 
     useEffect(() => {
-        api.on("isConnect", (isConnect) => {
-            state.connect = isConnect
-            state.connectDevice = api.getConnectDevice()
+        const set = (type, isConnect) => {
+            state.connect[type] = isConnect
+            state.connectDevice[type] = api.getConnectDevice(type)
             state.devices = api.getDevices()
             setState(state)
-        })
+        }
+        api.on("isConnectSwitchLayer", (isConnect) => set(api.deviceType.switchLayer, isConnect))
+        api.on("isConnectOledClock", (isConnect) =>  set(api.deviceType.oledClock, isConnect))
         return () => {}
     }, [])
 
@@ -65,14 +70,16 @@ const Content = () => {
 
     return (
         <div>
-            <Header />
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }} className={classes.tabs}>
                 <Tabs value={tab} onChange={handleChange} aria-label="basic tabs">
-                    <Tab label="Setting" />
-                    <Tab label="Active Window" />
+                    <Tab label="Auto Switch Layer" />
+                    <Tab label="Oled Clock" />
+                    <Tab label="View Active Window" />
                 </Tabs>
             </Box>
-            {tab === 0 ? (<Settings />) : (<ActiveWindow />)}
+            {tab === 0 && <Layer />}
+            {tab === 1 && <OledClock />}
+            {tab === 2 && <ActiveWindow />}
         </div>
     )
 }

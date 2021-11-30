@@ -42,10 +42,6 @@ const useStylesBase = (theme) => makeStyles(() =>
             paddingLeft: "10px",
             color: theme.palette.primary.main
         },
-        settingsOledClock : {
-            textAlign: "right",
-            paddingRight: "50px"
-        },
         activeWindowTitle: {
             display: "flex",
             minHeight: "48px",

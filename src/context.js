@@ -9,7 +9,7 @@ export function useStateContext() {
 }
 
 export function StateProvider({ children }) {
-    const [state, _setState] = useState({init: true, devices: [], connectDevice:{}, connect: false, activeWindow: [], oledClock: false})
+    const [state, _setState] = useState({init: true, devices: [], connectDevice:{}, connect: {}, activeWindow: []})
 
     const setState = (obj) => {
         api.setDevices(obj.devices)
@@ -18,8 +18,7 @@ export function StateProvider({ children }) {
             devices: obj.devices,
             connect: obj.connect,
             connectDevice: obj.connectDevice,
-            activeWindow: obj.activeWindow,
-            oledClock: obj.oledClock
+            activeWindow: obj.activeWindow
         })
     }
     const value = {

@@ -27,8 +27,8 @@ const commandToBytes = exports.commandToBytes = (command) => {
 
 
 let isOledOn = false
-let connect = false
-let kbd
+let connect = {}
+let kbd = {}
 
 const DEFAULT_USAGE = {
   usage: 0x61,
@@ -39,40 +39,45 @@ const getKBD = (device) => HID.devices().find(d =>
     (device ?
         (d.manufacturer === device.manufacturer &&
             d.product === device.product &&
-            d.vendorId === device.vendor_id &&
-            d.productId === device.product_id) : false) &&
+            d.vendorId === device.vendorId &&
+            d.productId === device.productId) : false) &&
     d.usage === DEFAULT_USAGE.usage &&
     d.usagePage === DEFAULT_USAGE.usagePage
 )
 
-const start = (device) => {
-    kbd = new HID.HID(device.path)
-    kbd.on('error', (err) => {
+const start = (deviceType, device) => {
+  const d = getKBD(device)
+  if(d){
+    kbd[deviceType] = new HID.HID(d.path)
+    kbd[deviceType].on('error', (err) => {
       console.log(err)
-      stop(kbd)
+      stop(deviceType)
     })
-    kbd.on('data', data => {
+    kbd[deviceType].on('data', data => {
       const str = data.toString()
       if(str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
     })
-    connect = true
+    connect[deviceType] = true
+  }
 }
 
-const stop = () => {
-  kbd.removeAllListeners("data")
-  kbd.close()
-  connect = false
+const stop = (deviceType) => {
+  if(kbd[deviceType]){
+      kbd[deviceType].removeAllListeners("data")
+      //kbd[deviceType].close()
+      connect[deviceType] = false
+  }
 }
 
-const writeCommand = (command) => {
-  if(kbd){
+const writeCommand = (deviceType, command) => {
+  if(kbd[deviceType]){
     const bytes = commandToBytes(command)
-    kbd.write(bytes)
+    kbd[deviceType].write(bytes)
   }
 }
 
 module.exports.isOledOn = () => isOledOn
-module.exports.connect = () => connect
+module.exports.connect = (type) => connect[type]
 module.exports.getKBD = getKBD
 module.exports.start = start
 module.exports.stop = stop

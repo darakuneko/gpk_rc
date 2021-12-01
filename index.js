@@ -61,7 +61,7 @@ app.on('ready', () => {
   ]))
 
   createWindow()
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 })
 
 app.on('activate', () => {

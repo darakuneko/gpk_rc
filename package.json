@@ -5,7 +5,7 @@
     "build:win": "del /s /q public\\build && del /s /q build && del /s /q dist && npx webpack",
     "start": "npx webpack && npx electron .",
     "dist:win": "npm run build:win && electron-builder --w",
-    "dist:linux": "npm run build && electron-builder -w"
+    "dist:linux": "npm run build && electron-builder -l"
   },
   "name": "gpk_cr",
   "version": "0.1.5",

@@ -28,8 +28,10 @@ const LayerEdit = ((props) => {
     const selectArr = [...Array(20).keys()].map(i => ++i);
 
     const handleLayerAdd = (id) => () => {
+
         state.devices = state.devices.map(d => {
             if(d.id === id) {
+                console.log(d.layers)
                 if(d.layers.length > 0) {
                     const l = d.layers.sort((a,b) => b.layer - a.layer)[0].layer
                     d.layers.push({name: "", layer: parseInt(l) + 1})
@@ -119,7 +121,7 @@ const LayerEdit = ((props) => {
                     <Box m={2} className={classes.wrapSettingLayer}>
                             <div className={classes.settingLayer}>
                             {device.priority === 1 ? (
-                            <IconButton aria-label="add" fontSize="small" onClick={handleLayerAdd(state, setState, device.id)}>
+                            <IconButton aria-label="add" fontSize="small" onClick={handleLayerAdd(device.id)}>
                                 <Add fontSize="inherit" />
                             </IconButton>
                                 ) : (<span />)}

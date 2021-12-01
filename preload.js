@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer} = require("electron")
+const {contextBridge, ipcRenderer} = require("electron")
 const dayjs = require('dayjs')
 const Store = require("electron-store")
 const {start, stop, writeCommand, connect, isOledOn} = require(`${__dirname}/qmkrcd`)
@@ -22,16 +22,16 @@ const command = {
     switchLayerStop: () => stop(deviceType.switchLayer),
     oledClockStart: (kbd) => start(deviceType.oledClock, kbd),
     oledClockStop: () => stop(deviceType.oledClock),
-    switchLayer: (n) => writeCommand(deviceType.switchLayer, { id :34, data :[n]}),
+    switchLayer: (n) => writeCommand(deviceType.switchLayer, {id: 34, data: [n]}),
     setOledState: async () => {
-        writeCommand(deviceType.oledClock, { id :36 })
+        writeCommand(deviceType.oledClock, {id: 36})
         await sleep(300)
     },
-    oledWrite: (str) => writeCommand(deviceType.oledClock, { id :23, data :str }),
+    oledWrite: (str) => writeCommand(deviceType.oledClock, {id: 23, data: str}),
     isServerConnect: () => true,
-    getConnectDevice: (type) =>  store && store.get('devices') ? store.get('devices').find(d => d.priority === 0 && d.type === type) : undefined,
+    getConnectDevice: (type) => store && store.get('devices') ? store.get('devices').find(d => d.priority === 0 && d.type === type) : undefined,
     getDevices: () => store ? store.get('devices') : undefined,
-    setDevices: (obj) =>  store ? store.set('devices', obj) : undefined,
+    setDevices: (obj) => store ? store.set('devices', obj) : undefined,
     setActiveWindow: () => ipcRenderer.send("setActiveWindow"),
     changeActiveWindow: () => ipcRenderer.send("changeActiveWindow", params.onWindowName),
     connectSwitchLayer: (c) => ipcRenderer.send("connectSwitchLayer", c),
@@ -68,14 +68,14 @@ const keyboardSendLoop = async () => {
         await command.setActiveWindow()
         if (params.lastWindowName !== params.onWindowName) await command.changeActiveWindow()
         const connectSwitchLayer = connect(deviceType.switchLayer)
-        if(params.connect[deviceType.switchLayer] !== connectSwitchLayer ) await command.connectSwitchLayer(connectSwitchLayer)
+        if (params.connect[deviceType.switchLayer] !== connectSwitchLayer) await command.connectSwitchLayer(connectSwitchLayer)
         params.connect[deviceType.switchLayer] = connectSwitchLayer
 
-        if(connectSwitchLayer){
-            if (params.lastWindowName !== params.onWindowName && params.lastLayer !== currentLayer){
+        if (connectSwitchLayer) {
+            if (params.lastWindowName !== params.onWindowName && params.lastLayer !== currentLayer) {
                 command.switchLayer(currentLayer)
             }
-        }else {
+        } else {
             command.switchLayerStart(switchLayerDevice)
         }
         params.lastLayer = currentLayer
@@ -84,7 +84,7 @@ const keyboardSendLoop = async () => {
     const oledClockFn = async () => {
         const oledClockDevice = command.getConnectDevice(deviceType.oledClock)
         const connectOledClock = connect(deviceType.oledClock)
-        if(params.connect[deviceType.oledClock] !== connectOledClock) await command.connectOledClock(connectOledClock)
+        if (params.connect[deviceType.oledClock] !== connectOledClock) await command.connectOledClock(connectOledClock)
         params.connect[deviceType.oledClock] = connectOledClock
         connectOledClock ? await oledWriteNow() : command.oledClockStart(oledClockDevice)
     }
@@ -96,16 +96,15 @@ const keyboardSendLoop = async () => {
 
 const oledWriteNow = async () => {
     const now = dayjs().format('YYYY/MM/DD ddd HH:mm ')
-    if(params.dt !== now) {
+    if (params.dt !== now) {
         await command.setOledState()
-        console.log(isOledOn())
-        if(isOledOn()) command.oledWrite(now)
+        if (isOledOn()) command.oledWrite(now)
         params.dt = now
     }
 }
 
-ipcRenderer.on("getActiveWindow",  (e, data) => {
-    if(data) params.onWindowName = data
+ipcRenderer.on("getActiveWindow", (e, data) => {
+    if (data) params.onWindowName = data
 })
 
-ipcRenderer.on("quit",  () => command.stop())
+ipcRenderer.on("quit", () => command.stop())

@@ -10,7 +10,7 @@ import {handleTextChange, handleSwitchChange, handleDelete, toHex, variant} from
 import {useStateContext} from "../context";
 
 const OledClockEdit = ((props) => {
-    const { state, setState } = useStateContext();
+    const {state, setState} = useStateContext();
     const device = props.device
     const classes = useStyles()
 
@@ -26,7 +26,7 @@ const OledClockEdit = ((props) => {
                     <Switch
                         className={classes.settingSwitch}
                         onChange={_handleSwitchChange(device.id)}
-                        checked={device.priority === 0} />
+                        checked={device.priority === 0}/>
                 </Box>
                 <Box m={2}>
                     <TextField
@@ -70,10 +70,11 @@ const OledClockEdit = ((props) => {
                 </Box>
                 <Box m={2}>
                     {device.priority === 1 ? (
-                        <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large" onClick={handleDelete(state, setState, device.id)}>
-                            <Delete fontSize="inherit" />
+                        <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
+                                    onClick={handleDelete(state, setState, device.id)}>
+                            <Delete fontSize="inherit"/>
                         </IconButton>
-                    ) : (<div />)
+                    ) : (<div/>)
                     }
                 </Box>
             </Box>

@@ -1,7 +1,4 @@
-import React, {  useEffect, useRef, useState } from 'react'
-
-const { api } = window
-
+import React from 'react'
 import {useStateContext} from "../context"
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -12,10 +9,10 @@ import ListItemText from "@material-ui/core/ListItemText";
 import useStyles from "../style";
 
 const ActiveWindow = () => {
-    const { state, setState } = useStateContext()
+    const {state} = useStateContext()
     const classes = useStyles()
     const description = "Open the application used for layer switching. \n Please Copy & Paste to layer's application."
-    const brText = description.split("\n").map((line, key) => <span key={key}>{line}<br /></span>);
+    const brText = description.split("\n").map((line, key) => <span key={key}>{line}<br/></span>);
 
     return (
         <Paper elevation={0} className={classes.settings}>
@@ -30,7 +27,7 @@ const ActiveWindow = () => {
                 </ListItem>
                 {state.activeWindow.map((a, i) => (
                     <ListItem key={`active-window-${i}`}>
-                        <ListItemText primary={a} />
+                        <ListItemText primary={a}/>
                     </ListItem>
                 ))}
             </List>

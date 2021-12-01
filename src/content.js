@@ -7,7 +7,7 @@ import Box from "@material-ui/core/Box"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 
-const { api } = window
+const {api} = window
 
 import {useStateContext} from "./context"
 

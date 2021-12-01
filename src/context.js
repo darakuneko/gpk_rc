@@ -1,6 +1,7 @@
 import React from 'react'
-import { createContext, useState, useContext } from 'react'
-const { api } = window
+import {createContext, useState, useContext} from 'react'
+
+const {api} = window
 
 const stateContext = createContext({})
 
@@ -8,8 +9,8 @@ export function useStateContext() {
     return useContext(stateContext)
 }
 
-export function StateProvider({ children }) {
-    const [state, _setState] = useState({init: true, devices: [], connectDevice:{}, connect: {}, activeWindow: []})
+export function StateProvider({children}) {
+    const [state, _setState] = useState({init: true, devices: [], connectDevice: {}, connect: {}, activeWindow: []})
 
     const setState = (obj) => {
         api.setDevices(obj.devices)

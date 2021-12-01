@@ -1,7 +1,7 @@
 const path = require('path');
 
-module.exports =  [{
-    target:"electron-renderer",
+module.exports = [{
+    target: "electron-renderer",
     devtool: 'source-map',
     mode: 'development',
     entry: {

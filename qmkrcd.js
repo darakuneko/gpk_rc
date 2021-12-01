@@ -7,22 +7,22 @@ const dataToBytes = (data) => typeof data === 'string' ? strToBytes(data) : data
 const strToBytes = (str) => [...str.split('').map(c => c.charCodeAt(0)), 0]
 
 const lengthToBytes = exports.lengthToBytes = (length) => {
-  const lengthBuffer = new ArrayBuffer(4)
-  const lengthDataView = new DataView(lengthBuffer)
-  lengthDataView.setUint32(0, length, true)
-  return new Uint8Array(lengthBuffer)
+    const lengthBuffer = new ArrayBuffer(4)
+    const lengthDataView = new DataView(lengthBuffer)
+    lengthDataView.setUint32(0, length, true)
+    return new Uint8Array(lengthBuffer)
 }
 
 const commandToBytes = exports.commandToBytes = (command) => {
-  const { id, data } = command
-  const bytes = data ? dataToBytes(data) : []
-  const unpadded = [
-    0, id,
-    ...lengthToBytes(bytes.length),
-    ...bytes
-  ]
-  const padding = new Array(PACKET_PADDING - (unpadded.length % PACKET_PADDING)).fill(0)
-  return [ ...unpadded, ...padding ]
+    const {id, data} = command
+    const bytes = data ? dataToBytes(data) : []
+    const unpadded = [
+        0, id,
+        ...lengthToBytes(bytes.length),
+        ...bytes
+    ]
+    const padding = new Array(PACKET_PADDING - (unpadded.length % PACKET_PADDING)).fill(0)
+    return [...unpadded, ...padding]
 }
 
 
@@ -31,8 +31,8 @@ let connect = {}
 let kbd = {}
 
 const DEFAULT_USAGE = {
-  usage: 0x61,
-  usagePage: 0xFF60
+    usage: 0x61,
+    usagePage: 0xFF60
 }
 
 const getKBD = (device) => HID.devices().find(d =>
@@ -46,34 +46,34 @@ const getKBD = (device) => HID.devices().find(d =>
 )
 
 const start = (deviceType, device) => {
-  const d = getKBD(device)
-  if(d){
-    kbd[deviceType] = new HID.HID(d.path)
-    kbd[deviceType].on('error', (err) => {
-      console.log(err)
-      stop(deviceType)
-    })
-    kbd[deviceType].on('data', data => {
-      const str = data.toString()
-      if(str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
-    })
-    connect[deviceType] = true
-  }
+    const d = getKBD(device)
+    if (d) {
+        kbd[deviceType] = new HID.HID(d.path)
+        kbd[deviceType].on('error', (err) => {
+            console.log(err)
+            stop(deviceType)
+        })
+        kbd[deviceType].on('data', data => {
+            const str = data.toString()
+            if (str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
+        })
+        connect[deviceType] = true
+    }
 }
 
 const stop = (deviceType) => {
-  if(kbd[deviceType]){
-      kbd[deviceType].removeAllListeners("data")
-      //kbd[deviceType].close()
-      connect[deviceType] = false
-  }
+    if (kbd[deviceType]) {
+        kbd[deviceType].removeAllListeners("data")
+        //kbd[deviceType].close()
+        connect[deviceType] = false
+    }
 }
 
 const writeCommand = (deviceType, command) => {
-  if(kbd[deviceType]){
-    const bytes = commandToBytes(command)
-    kbd[deviceType].write(bytes)
-  }
+    if (kbd[deviceType]) {
+        const bytes = commandToBytes(command)
+        kbd[deviceType].write(bytes)
+    }
 }
 
 module.exports.isOledOn = () => isOledOn

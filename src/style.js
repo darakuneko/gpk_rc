@@ -29,8 +29,7 @@ const useStylesBase = (theme) => makeStyles(() =>
         tabs: {
             paddingTop: "40px",
         },
-        settings: {
-        },
+        settings: {},
         settingsTitle: {
             display: "flex",
             justifyContent: "space-between",
@@ -60,15 +59,14 @@ const useStylesBase = (theme) => makeStyles(() =>
         settingDelete: {
             paddingTop: "6px"
         },
-        wrapSettingLayer:{
+        wrapSettingLayer: {
             paddingRight: "70px"
         },
         settingLayer: {
             display: "flex",
             justifyContent: "end",
         },
-        settingLayerRead: {
-        },
+        settingLayerRead: {},
         settingLayerAdd: {
             paddingRight: "40px"
         }

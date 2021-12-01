@@ -21,8 +21,7 @@ const Content = () => {
 
     useEffect( () => {
         try{
-            const timer = setInterval(api.keyboardSendLoop, 300)
-            api.send("setTimer", timer)
+            setInterval(api.keyboardSendLoop, 300)
         } catch (e) {
             console.log("error timer")
         }

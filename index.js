@@ -3,7 +3,7 @@ const activeWindows = require('active-win')
 
 let mainWindow
 let tray = null
-let timer
+
 const createWindow = () => {
     mainWindow = new BrowserWindow({
         width: 1000,
@@ -54,7 +54,6 @@ app.on('ready', () => {
             label: 'Exit',
             click: () => {
                 app.isQuiting = true
-                clearInterval(timer)
                 app.quit()
             }
         }
@@ -83,8 +82,4 @@ ipcMain.on("changeActiveWindow", (e, data) => {
 ipcMain.on("setActiveWindow", async () => {
     const result = await activeWindows()
     mainWindow.webContents.send("getActiveWindow", result ? result.owner.name : "")
-})
-
-ipcMain.on("setTimer", async (e, data) => {
-    timer = data
 })

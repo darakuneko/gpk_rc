@@ -10,10 +10,16 @@
 
 ## Build
 
-Windows
+windows
 
 ```sh
  npm run dist:win --openssl_fips=X
+```
+
+mac
+
+```sh
+ npm run dist:mac --openssl_fips=X
 ```
 
 linux

@@ -17,7 +17,7 @@ const ActiveWindow = () => {
     return (
         <Paper elevation={0} className={classes.settings}>
             <Typography component="h1" variant="h6" color="inherit" className={classes.activeWindowTitle}>
-                <div>Latest ActiveWindows</div>
+                <div>Latest ActiveWindows 10</div>
             </Typography>
             <List>
                 <ListItem key={`active-window-description`} className={classes.activeWindowDescription}>

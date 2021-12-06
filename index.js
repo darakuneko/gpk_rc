@@ -1,9 +1,10 @@
 const {app, BrowserWindow, ipcMain, Tray, Menu} = require("electron")
 const activeWindows = require('active-win')
+const { windowManager } = require("node-window-manager");
+windowManager.requestAccessibility()
 
 let mainWindow
 let tray = null
-
 const createWindow = () => {
     mainWindow = new BrowserWindow({
         width: 1000,
@@ -40,7 +41,13 @@ if (!doubleBoot) app.quit()
 
 app.on('ready', () => {
     if (process.platform === 'darwin') app.dock.hide()
-    tray = new Tray(`${__dirname}/icons/icon-72x72.${process.platform === 'win32' ? 'ico' : 'png'}`)
+    const icon = () => {
+        if(process.platform==='win32') return "icon-72x72.ico"
+        if(process.platform==='darwin') return "tray.png"
+        return "icon-72x72.png"
+    }
+
+    tray = new Tray(`${__dirname}/icons/${icon()}`)
     tray.setContextMenu(Menu.buildFromTemplate([
         {
             label: 'settings',
@@ -80,6 +87,15 @@ ipcMain.on("changeActiveWindow", (e, data) => {
 })
 
 ipcMain.on("setActiveWindow", async () => {
-    const result = await activeWindows()
-    mainWindow.webContents.send("getActiveWindow", result ? result.owner.name : "")
+    const getWindowName = async () => {
+        if (process.platform === 'darwin') {
+            const window = windowManager.getActiveWindow();
+            return window.path.replaceAll(/.*\/|.app$/g,"")
+        } else {
+            const result = await activeWindows()
+            if(result) return result.owner.name
+        }
+        return ""
+    }
+    mainWindow.webContents.send("getActiveWindow", await getWindowName())
 })

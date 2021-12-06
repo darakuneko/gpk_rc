@@ -65,7 +65,10 @@ app.on('ready', () => {
             }
         }
     ]))
-
+    tray.on('double-click', () => {
+        mainWindow.show()
+        mainWindow.focus()
+    })
     createWindow()
     //mainWindow.webContents.openDevTools()
 })

@@ -2,6 +2,7 @@ import React, {  useEffect, useRef, useState } from 'react'
 import Layer from "./renderer/layer"
 import ActiveWindow from "./renderer/activeWindow"
 import OledClock from "./renderer/oledClock"
+import KeyboardList from "./renderer/keyboardList"
 
 import Box from "@material-ui/core/Box"
 import Tabs from "@material-ui/core/Tabs"
@@ -20,8 +21,15 @@ const Content = () => {
     const loadingRef = useRef()
 
     useEffect( () => {
+        const fn = () => {
+            if(state.mainWindowShow){
+                state.kbdList = api.getKBDList()
+                setState(state)
+            }
+            api.keyboardSendLoop()
+        }
         try{
-            setInterval(api.keyboardSendLoop, 300)
+            setInterval(fn, 300)
         } catch (e) {
             console.log("error timer")
         }
@@ -63,6 +71,14 @@ const Content = () => {
         return () => {}
     }, [])
 
+    useEffect(() => {
+        api.on("mainWindowShow", (bool) => {
+            state.mainWindowShow = bool
+            setState(state)
+        })
+        return () => {}
+    }, [])
+
     const handleChange = (event, newValue) => {
         setTab(newValue)
     }
@@ -74,11 +90,13 @@ const Content = () => {
                     <Tab label="Auto Switch Layer" />
                     <Tab label="Oled Clock" />
                     <Tab label="View Active Window" />
+                    <Tab label="Registerable Keyboard List" />
                 </Tabs>
             </Box>
             {tab === 0 && <Layer />}
             {tab === 1 && <OledClock />}
             {tab === 2 && <ActiveWindow />}
+            {tab === 3 && <KeyboardList />}
         </div>
     )
 }

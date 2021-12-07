@@ -23,14 +23,12 @@ const createWindow = () => {
     mainWindow.setMenu(null)
 
     mainWindow.on('minimize', (event) => {
-        event.preventDefault()
-        mainWindow.hide()
+        mainWindowHide(event, mainWindow)
     })
 
     mainWindow.on('close', (event) => {
         if (!app.isQuiting) {
-            event.preventDefault()
-            mainWindow.hide()
+            mainWindowHide(event, mainWindow)
         }
         return false
     })
@@ -52,8 +50,7 @@ app.on('ready', () => {
         {
             label: 'settings',
             click: () => {
-                mainWindow.show()
-                mainWindow.focus()
+                mainWindowShow(mainWindow)
             }
         }, {
             type: 'separator'
@@ -66,12 +63,24 @@ app.on('ready', () => {
         }
     ]))
     tray.on('double-click', () => {
-        mainWindow.show()
-        mainWindow.focus()
+        mainWindowShow(mainWindow)
     })
     createWindow()
-    //mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 })
+
+const mainWindowShow = (mainWindow) => {
+    mainWindow.show()
+    mainWindow.focus()
+    mainWindow.webContents.send("mainWindowShow", true)
+}
+
+
+const mainWindowHide = (event, mainWindow) => {
+    event.preventDefault()
+    mainWindow.hide()
+    mainWindow.webContents.send("mainWindowShow", false)
+}
 
 app.on('activate', () => {
     if (mainWindow === null) createWindow()
@@ -101,4 +110,8 @@ ipcMain.on("setActiveWindow", async () => {
         return ""
     }
     mainWindow.webContents.send("getActiveWindow", await getWindowName())
+})
+
+ipcMain.on("onWindowShow", async () => {
+    mainWindow.webContents.send("windowShow", true)
 })

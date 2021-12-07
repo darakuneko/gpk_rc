@@ -8,7 +8,7 @@ import Add from '@material-ui/icons/Add';
 import {v4 as uuidv4} from 'uuid';
 import OledClockEdit from "./oledClockEdit";
 
-import {useStateContext} from "../context";
+import {createOledClockObj, useStateContext} from "../context";
 
 const {api} = window
 
@@ -18,16 +18,7 @@ const OledClock = (() => {
     const classes = useStyles()
 
     const handleAdd = () => {
-        const obj = {
-            id: uuidv4(),
-            priority: 1,
-            manufacturer: "",
-            type: api.deviceType.oledClock,
-            product: "",
-            vendorId: "",
-            productId: "",
-        }
-        state.devices.push(obj)
+        state.devices.push(createOledClockObj())
         setState(state)
     }
 

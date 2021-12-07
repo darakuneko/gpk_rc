@@ -1,7 +1,7 @@
 const {contextBridge, ipcRenderer} = require("electron")
 const dayjs = require('dayjs')
 const Store = require("electron-store")
-const {start, stop, writeCommand, connect, isOledOn} = require(`${__dirname}/qmkrcd`)
+const {start, stop, writeCommand, connect, isOledOn, getKBDList} = require(`${__dirname}/qmkrcd`)
 let store
 
 const deviceType = {
@@ -52,6 +52,7 @@ process.once('loaded', async () => {
             getConnectDevice: command.getConnectDevice,
             getDevices: command.getDevices,
             setDevices: command.setDevices,
+            getKBDList: getKBDList,
             send: (channel, data) => ipcRenderer.send(channel, data),
             on: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args))
         })

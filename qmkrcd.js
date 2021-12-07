@@ -45,6 +45,11 @@ const getKBD = (device) => HID.devices().find(d =>
     d.usagePage === DEFAULT_USAGE.usagePage
 )
 
+const getKBDList = () => HID.devices().filter(d =>
+    d.usage === DEFAULT_USAGE.usage &&
+    d.usagePage === DEFAULT_USAGE.usagePage
+).sort((a, b) => `${a.manufacturer}${a.product}` > `${b.manufacturer}${b.product}` ? 1 : -1)
+
 const start = (deviceType, device) => {
     const d = getKBD(device)
     if (d) {
@@ -79,6 +84,7 @@ const writeCommand = (deviceType, command) => {
 module.exports.isOledOn = () => isOledOn
 module.exports.connect = (type) => connect[type]
 module.exports.getKBD = getKBD
+module.exports.getKBDList = getKBDList
 module.exports.start = start
 module.exports.stop = stop
 module.exports.writeCommand = writeCommand

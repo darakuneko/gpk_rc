@@ -8,7 +8,7 @@ import Add from '@material-ui/icons/Add';
 import {v4 as uuidv4} from 'uuid';
 import LayerEdit from "./layerEdit";
 
-import {useStateContext} from "../context";
+import {createLayerObj, useStateContext} from "../context";
 
 const {api} = window
 
@@ -18,17 +18,7 @@ const Layer = (() => {
     const classes = useStyles()
 
     const handleAdd = () => {
-        const obj = {
-            id: uuidv4(),
-            priority: 1,
-            type: api.deviceType.switchLayer,
-            manufacturer: "",
-            product: "",
-            vendorId: "",
-            productId: "",
-            layers: [{name: "", layer: 1}]
-        }
-        state.devices.push(obj)
+        state.devices.push(createLayerObj())
         setState(state)
     }
 

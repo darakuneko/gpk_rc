@@ -18,8 +18,10 @@ export function StateProvider({children}) {
         connect: {},
         activeWindow: [],
         mainWindowShow: false,
-        kbdList: []
+        storePath: ""
     })
+
+    const [kbdListState, setKbdList] = useState([])
 
     const setState = (obj) => {
         api.setDevices(obj.devices)
@@ -30,12 +32,15 @@ export function StateProvider({children}) {
             connectDevice: obj.connectDevice,
             activeWindow: obj.activeWindow,
             mainWindowShow: obj.mainWindowShow,
-            kbdList: obj.kbdList
+            storePath: obj.storePath,
         })
     }
+
     const value = {
         state,
         setState,
+        kbdListState,
+        setKbdList
     }
 
     return (
@@ -46,7 +51,7 @@ export function StateProvider({children}) {
 export const createLayerObj = () => {
     return {
         id: uuidv4(),
-        priority: 1,
+        onSwitchLayer: 0,
         type: api.deviceType.switchLayer,
         manufacturer: "",
         product: "",
@@ -59,7 +64,7 @@ export const createLayerObj = () => {
 export const createOledClockObj = () => {
     return {
         id: uuidv4(),
-        priority: 1,
+        onOledClock: 0,
         manufacturer: "",
         type: api.deviceType.oledClock,
         product: "",

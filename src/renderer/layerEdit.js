@@ -16,7 +16,7 @@ import TableRow from '@material-ui/core/TableRow';
 import {IconButton} from "@material-ui/core";
 import Add from '@material-ui/icons/Add';
 import Delete from '@material-ui/icons/Delete';
-import {handleTextChange, handleSwitchChange, handleDelete, toHex, variant} from "./commonEdit";
+import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
 
 import {useStateContext} from "../context";
 
@@ -29,10 +29,8 @@ const LayerEdit = ((props) => {
     const selectArr = [...Array(20).keys()].map(i => ++i);
 
     const handleLayerAdd = (id) => () => {
-
         state.devices = state.devices.map(d => {
             if (d.id === id) {
-                console.log(d.layers)
                 if (d.layers.length > 0) {
                     const l = d.layers.sort((a, b) => b.layer - a.layer)[0].layer
                     d.layers.push({name: "", layer: parseInt(l) + 1})
@@ -53,13 +51,14 @@ const LayerEdit = ((props) => {
             }
             return d
         })
+
         setState(state)
     }
 
     const _handleSwitchChange = (id) => (e) => {
         const isChecked = e.currentTarget.checked
-        const startDevice = handleSwitchChange(state, setState, id, isChecked, api.deviceType.switchLayer)
-        startDevice ? api.switchLayerStart(startDevice) : api.switchLayerStop()
+        const obj = handleSwitchChange(state, setState, id, isChecked, api.deviceType.switchLayer)
+        obj.isStart ? api.switchLayerStart(obj.device) : api.switchLayerStop(obj.device)
     }
 
     return (<div key={`${device.id}`}>
@@ -68,50 +67,42 @@ const LayerEdit = ((props) => {
                     <Switch
                         className={classes.settingSwitch}
                         onChange={_handleSwitchChange(device.id)}
-                        checked={device.priority === 0}/>
+                        checked={device.onSwitchLayer === 1}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="Manufacturer"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "manufacturer")}
                         defaultValue={device.manufacturer}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="Product"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "product")}
                         defaultValue={device.product}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="VendorId"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "vendorId")}
                         defaultValue={toHex(device.vendorId)}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="ProductId"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "productId")}
                         defaultValue={toHex(device.productId)}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
-                    {device.priority === 1 ? (
+                    {device.onSwitchLayer === 0 ? (
                         <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
                                     onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>
@@ -122,13 +113,13 @@ const LayerEdit = ((props) => {
             </Box>
             <Box m={2} className={classes.wrapSettingLayer}>
                 <div className={classes.settingLayer}>
-                    {device.priority === 1 ? (
+                    {device.onSwitchLayer === 0 ? (
                         <IconButton aria-label="add" fontSize="small" onClick={handleLayerAdd(device.id)}>
                             <Add fontSize="inherit"/>
                         </IconButton>
                     ) : (<span/>)}
                 </div>
-                {device.priority === 1 ? (device.layers && device.layers.map((l, n) => (
+                {device.onSwitchLayer === 0 ? (device.layers && device.layers.map((l, n) => (
                             <div key={`edit-${device.id}-${l.layer}-${n}`} className={classes.settingLayer}>
                                 <Box m={2}>
                                     <InputLabel>Layer</InputLabel>
@@ -165,7 +156,7 @@ const LayerEdit = ((props) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Layer</TableCell>
-                                <TableCell>Application</TableCell>
+                                <TableCell>Application/OS</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

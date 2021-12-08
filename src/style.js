@@ -17,11 +17,9 @@ const theme_base = createTheme({
 export const theme = responsiveFontSizes(theme_base)
 const useStylesBase = (theme) => makeStyles(() =>
     createStyles({
-        title: {
+        deviceStatus: {
+            paddingLeft: "10px",
             display: "flex",
-            justifyContent: "center",
-            height: "40px",
-            alignItems: "center"
         },
         device: {
             paddingRight: "40px"

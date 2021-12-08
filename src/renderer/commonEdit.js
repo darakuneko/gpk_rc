@@ -20,15 +20,28 @@ export const handleTextChange = (state, setState, id, propName, layer) => (e) =>
 
 export const handleSwitchChange = (state, setState, id, isChecked, type) => {
     state.devices = state.devices.map(d => {
-        if (d.type === type) {
-            d.id === id && isChecked ? d.priority = 0 : d.priority = 1
+        if (d.type === type && d.id === id) {
+            if(type === api.deviceType.switchLayer) isChecked ? d.onSwitchLayer = 1 : d.onSwitchLayer = 0
+            if(type === api.deviceType.oledClock) isChecked ? d.onOledClock = 1 : d.onOledClock = 0
         }
         return d
     })
-    const startDevice = state.devices.find(d => d.priority === 0 && d.type === type)
-    state.connectDevice = startDevice
+    const device = state.devices.find(d => d.id === id)
+    const getDevice = (type) => {
+        if(type === api.deviceType.switchLayer) {
+            return state.devices.find(d => d.onSwitchLayer === 1 && d.type === type && d.id === id)
+        }
+        return state.devices.find(d => d.onOledClock === 1 && d.type === type && d.id === id)
+    }
+    const typeId = api.typeId(type, device)
+    const startDevice = getDevice(type)
+    startDevice ? state.connectDevice[typeId] = startDevice : delete state.connectDevice[typeId]
     setState(state)
-    return startDevice
+
+    return {
+        isStart: !!startDevice,
+        device: device
+    }
 }
 
 export const handleDelete = (state, setState, id) => () => {
@@ -45,5 +58,3 @@ export const toHex = (number) => {
     }
     return hex
 }
-
-export const variant = (device) => device.priority === 0 ? "standard" : "filled"

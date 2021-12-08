@@ -66,7 +66,7 @@ app.on('ready', () => {
         mainWindowShow(mainWindow)
     })
     createWindow()
-    mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 })
 
 const mainWindowShow = (mainWindow) => {
@@ -74,7 +74,6 @@ const mainWindowShow = (mainWindow) => {
     mainWindow.focus()
     mainWindow.webContents.send("mainWindowShow", true)
 }
-
 
 const mainWindowHide = (event, mainWindow) => {
     event.preventDefault()

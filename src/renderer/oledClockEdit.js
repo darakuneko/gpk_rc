@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
 import {IconButton} from "@material-ui/core";
 import Delete from '@material-ui/icons/Delete';
-import {handleTextChange, handleSwitchChange, handleDelete, toHex, variant} from "./commonEdit";
+import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
 import {useStateContext} from "../context";
 
 const OledClockEdit = ((props) => {
@@ -16,8 +16,8 @@ const OledClockEdit = ((props) => {
 
     const _handleSwitchChange = (id) => (e) => {
         const isChecked = e.currentTarget.checked
-        const startDevice = handleSwitchChange(state, setState, id, isChecked, api.deviceType.oledClock)
-        startDevice ? api.oledClockStart(startDevice) : api.oledClockStop()
+        const obj = handleSwitchChange(state, setState, id, isChecked, api.deviceType.oledClock)
+        obj.isStart ? api.switchLayerStart(obj.device) : api.switchLayerStop(obj.device)
     }
 
     return (<div key={`${device.id}`}>
@@ -26,50 +26,42 @@ const OledClockEdit = ((props) => {
                     <Switch
                         className={classes.settingSwitch}
                         onChange={_handleSwitchChange(device.id)}
-                        checked={device.priority === 0}/>
+                        checked={device.onOledClock === 1}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="Manufacturer"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "manufacturer")}
                         defaultValue={device.manufacturer}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="Product"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "product")}
                         defaultValue={device.product}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="VendorId"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "vendorId")}
                         defaultValue={toHex(device.vendorId)}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
                     <TextField
                         label="ProductId"
-                        variant={variant(device)}
+                        variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "productId")}
                         defaultValue={toHex(device.productId)}
-                        InputProps={{
-                            readOnly: device.priority === 0,
-                        }}/>
+                        InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
-                    {device.priority === 1 ? (
+                    {device.onOledClock === 0 ? (
                         <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
                                     onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>

@@ -15,17 +15,14 @@ import {useStateContext} from "./context"
 import useStyles from "./style";
 
 const Content = () => {
-    const { state, setState } = useStateContext()
+    const { state, setState, setKbdList} = useStateContext()
     const [ tab, setTab] = useState(0)
     const classes = useStyles()
     const loadingRef = useRef()
 
     useEffect( () => {
         const fn = () => {
-            if(state.mainWindowShow){
-                state.kbdList = api.getKBDList()
-                setState(state)
-            }
+            if(state.mainWindowShow) setKbdList(api.getKBDList())
             api.keyboardSendLoop()
         }
         try{
@@ -37,10 +34,8 @@ const Content = () => {
     }, [loadingRef])
 
     useEffect( () => {
-        Object.values(api.deviceType).map(type => {
-            const connectDevice = api.getConnectDevice(type)
-            if(connectDevice) state.connectDevice[type] = connectDevice
-        })
+        const connectDevices = Object.values(api.deviceType).map(type => api.getConnectDevices(type)).flat()
+        connectDevices.forEach(d => state.connectDevice[api.typeId(d.type, d)] = d)
         const devices = api.getDevices()
         if(devices) state.devices = devices
         state.init = false
@@ -48,14 +43,17 @@ const Content = () => {
     }, [])
 
     useEffect(() => {
-        const set = (type, isConnect) => {
-            state.connect[type] = isConnect
-            state.connectDevice[type] = api.getConnectDevice(type)
+        const set = (type, obj) => {
+            const kbd = obj.kbd
+            const id = api.typeId(type, kbd)
+            state.connect[id] = obj.isConnected
+            //state.connectDevice = {}
+            api.getConnectDevices(type).map(d => state.connectDevice[api.typeId(type, d)] = d)
             state.devices = api.getDevices()
             setState(state)
         }
-        api.on("isConnectSwitchLayer", (isConnect) => set(api.deviceType.switchLayer, isConnect))
-        api.on("isConnectOledClock", (isConnect) =>  set(api.deviceType.oledClock, isConnect))
+        api.on("isConnectSwitchLayer", (dat) => set(api.deviceType.switchLayer, dat))
+        api.on("isConnectOledClock", (dat) =>  set(api.deviceType.oledClock, dat))
         return () => {}
     }, [])
 

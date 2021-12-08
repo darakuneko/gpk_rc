@@ -10,9 +10,11 @@ import useStyles from "../style";
 import {IconButton} from "@material-ui/core";
 import Add from "@material-ui/icons/Add";
 import Done from "@material-ui/icons/Done";
+import {toHex} from "./commonEdit";
+const {api} = window
 
 const KeyboardList = () => {
-    const {state, setState} = useStateContext();
+    const {state, setState, kbdListState} = useStateContext();
     const classes = useStyles()
     const registered = (type, kbd) => {
         const d = state.devices.filter(d => d.type === type).find(d =>
@@ -40,11 +42,11 @@ const KeyboardList = () => {
                 <div>Registerable Keyboard List</div>
             </Typography>
             <List>
-                {state.kbdList.map((kbd, i) => (
+                {kbdListState.map((kbd, i) => (
                     <ListItem key={`keyboard-list-${i}`}>
                         <ListItemText
                             primary={`${kbd.manufacturer} ${kbd.product}`}
-                            secondary={`vendorId:${kbd.vendorId} productId:${kbd.productId}`}/>
+                            secondary={`vendorId:${toHex(kbd.vendorId)} productId:${toHex(kbd.productId)}`}/>
                         {registered(api.deviceType.switchLayer, kbd) ? (
                            <IconButton aria-label="done" fontSize="large" disabled>
                                <Done fontSize="inherit"/>
@@ -67,6 +69,9 @@ const KeyboardList = () => {
                         <div>Oled Clock</div>
                     </ListItem>
                 ))}
+            </List>
+            <List>
+                <ListItem>file: {api.storePath()}</ListItem>
             </List>
         </Paper>
     )

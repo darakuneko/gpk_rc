@@ -66,6 +66,7 @@ const start = (device) => {
                 const str = data.toString()
                 if (str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
             })
+            writeCommand(device, {id: 34, data: [0]})
         }
         connect[id] = true
     }

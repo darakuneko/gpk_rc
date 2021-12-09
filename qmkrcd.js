@@ -35,7 +35,7 @@ const DEFAULT_USAGE = {
     usagePage: 0xFF60
 }
 
-const typeId = (type, device) => `${type}-${device.id}`
+const typeId = (type, device) => `${device.id}`
 
 const getKBD = (device) => HID.devices().find(d =>
     (device ?
@@ -56,15 +56,20 @@ const start = (deviceType, device) => {
     const d = getKBD(device)
     if (d && d.path) {
         const id = typeId(deviceType, device)
-        kbd[id] = new HID.HID(d.path)
-        kbd[id].on('error', (err) => {
-            console.log(err)
-            stop(deviceType, device)
-        })
-        kbd[id].on('data', data => {
-            const str = data.toString()
-            if (str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
-        })
+        try {
+            kbd[id] = new HID.HID(d.path)
+            kbd[id].on('error', (err) => {
+                console.log(err)
+                stop(deviceType, device)
+            })
+            kbd[id].on('data', data => {
+                const str = data.toString()
+                if (str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
+            })
+        } catch(e) {
+            console.log(e)
+        }
+
         connect[id] = true
     }
 }
@@ -73,7 +78,7 @@ const stop = (deviceType, device) => {
     const id = typeId(deviceType, device)
     if (kbd[id]) {
         kbd[id].removeAllListeners("data")
-        //kbd[deviceType].close()
+        if(process.platform === "darwin") kbd[id].close()
         connect[id] = false
     }
 }

@@ -84,15 +84,14 @@ const initStore = () => {
 }
 
 const keyboardSendLoop = async () => {
+
     const switchLayerFn = async () => {
         const allDevice = command.getDevices().filter(d => d.type === deviceType.switchLayer)
         const switchLayerDevices = command.getConnectDevices(deviceType.switchLayer)
-        await command.setActiveWindow()
-
         switchLayerDevices.map( async device => {
             const l = device ? device.layers.find(l => l.name === params.onWindowName) : ""
             const currentLayer = l ? l.layer : 0
-            if (params.lastWindowName !== params.onWindowName) await command.changeActiveWindow()
+
             const id = typeId(deviceType.switchLayer, device)
 
             const connectSwitchLayer = connect(id)
@@ -132,10 +131,17 @@ const keyboardSendLoop = async () => {
             connectOledClock ? await oledWriteNow(device) : command.oledClockStart(device)
         })
     }
+    
+    const activeWindowNameFn = async () => {
+        if (params.lastWindowName !== params.onWindowName) await command.changeActiveWindow()
+        params.lastWindowName = params.onWindowName
+    }
 
+    await command.setActiveWindow()
+    await sleep(100)
     await switchLayerFn()
     await oledClockFn()
-    params.lastWindowName = params.onWindowName
+    await activeWindowNameFn()
 }
 
 const oledWriteNow = async (kbd) => {

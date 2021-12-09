@@ -9,7 +9,7 @@
     "dist:linux": "npm run build && electron-builder -l"
   },
   "name": "gpk_cr",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "GPK RC",
   "homepage": "https://github.com/darakuneko",
   "author": {

@@ -89,7 +89,6 @@ const keyboardSendLoop = async () => {
             const currentLayer = l ? l.layer : 0
 
             const id = deviceId(device)
-
             const connectSwitchLayer = connect(id)
             if (params.connect[id] !== connectSwitchLayer) {
                 await command.connectSwitchLayer({kbd: device, isConnected:connectSwitchLayer})

@@ -60,7 +60,7 @@ const start = (device) => {
             kbd[id] = new HID.HID(d.path)
             kbd[id].on('error', (err) => {
                 console.log(err)
-                stop(deviceType, device)
+                stop(device)
             })
             kbd[id].on('data', data => {
                 const str = data.toString()
@@ -70,12 +70,12 @@ const start = (device) => {
         connect[id] = true
     }
 }
-
 const stop = (device) => {
     const id = deviceId(device)
     if (kbd[id]) {
         kbd[id].removeAllListeners("data")
         if(process.platform === "darwin") kbd[id].close()
+        kbd[id] = undefined
         connect[id] = false
     }
 }

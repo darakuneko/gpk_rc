@@ -87,10 +87,11 @@ const keyboardSendLoop = async () => {
     const switchLayerFn = async () => {
         const allDevice = command.getDevices().filter(d => d.type === deviceType.switchLayer)
         const switchLayerDevices = command.getConnectDevices(deviceType.switchLayer)
+        await command.setActiveWindow()
+
         switchLayerDevices.map( async device => {
             const l = device ? device.layers.find(l => l.name === params.onWindowName) : ""
             const currentLayer = l ? l.layer : 0
-            await command.setActiveWindow()
             if (params.lastWindowName !== params.onWindowName) await command.changeActiveWindow()
             const id = typeId(deviceType.switchLayer, device)
 

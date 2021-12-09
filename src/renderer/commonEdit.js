@@ -1,3 +1,5 @@
+const {api} = window
+
 export const handleTextChange = (state, setState, id, propName, layer) => (e) => {
     const value = propName === "layer" ? parseInt(e.currentTarget.getAttribute("data-value")) : e.currentTarget.value.trim()
 
@@ -18,30 +20,23 @@ export const handleTextChange = (state, setState, id, propName, layer) => (e) =>
     setState(state)
 }
 
-export const handleSwitchChange = (state, setState, id, isChecked, type) => {
+export const handleSwitchChange = (state, setState, device, isChecked) => {
+    const deviceId = api.deviceId(device)
     state.devices = state.devices.map(d => {
-        if (d.type === type && d.id === id) {
-            if(type === api.deviceType.switchLayer) isChecked ? d.onSwitchLayer = 1 : d.onSwitchLayer = 0
-            if(type === api.deviceType.oledClock) isChecked ? d.onOledClock = 1 : d.onOledClock = 0
-        }
+        if (api.deviceId(d) === deviceId) isChecked ? d.onSwitchButton = 1 : d.onSwitchButton = 0
         return d
     })
-    const device = state.devices.find(d => d.id === id)
-    const getDevice = (type) => {
-        if(type === api.deviceType.switchLayer) {
-            return state.devices.find(d => d.onSwitchLayer === 1 && d.type === type && d.id === id)
-        }
-        return state.devices.find(d => d.onOledClock === 1 && d.type === type && d.id === id)
-    }
-    const typeId = api.typeId(type, device)
-    const startDevice = getDevice(type)
-    startDevice ? state.connectDevice[typeId] = startDevice : delete state.connectDevice[typeId]
-    setState(state)
 
-    return {
-        isStart: !!startDevice,
-        device: device
+    const devices = state.devices.filter(d => d.onSwitchButton === 1 && d.id === device.id)
+    if(devices.length > 0){
+        state.connectDevice[deviceId] = device
+        api.start(device)
+    } else {
+        delete state.connectDevice[deviceId]
+        delete state.connect[deviceId]
+        api.stop(device)
     }
+    setState(state)
 }
 
 export const handleDelete = (state, setState, id) => () => {

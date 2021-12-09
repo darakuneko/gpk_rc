@@ -8,9 +8,12 @@ const CommonConnectDevice = ((props) => {
     const deviceType = props.deviceType
 
     const classes = useStyles()
-    const reg = new RegExp(deviceType)
-    const devices = () => state.connectDevice ? Object.keys(state.connectDevice).filter(d => d.match(reg)) : undefined
-
+    const devices = () => {
+        if(!state.connectDevice) return undefined
+        const devices  = state.devices.filter(d => d.type === deviceType)
+        const keys = Object.keys(state.connectDevice)
+        return devices.filter(d => keys.includes(api.deviceId(d)))
+    }
     return (<span>
             {state.init ? (
                 <div className={classes.deviceStatus}>
@@ -18,13 +21,13 @@ const CommonConnectDevice = ((props) => {
                 </div>
             ) : (
                 <div>
-                    {devices().length > 0 ? devices().map((key,i) => (
+                    {devices().length > 0 ? devices().map((d,i) => (
                         <div className={classes.deviceStatus} key={`connectDevice-${deviceType}-${i}`}>
                             <div className={classes.device}>
-                                {state.connectDevice[key] && state.connectDevice[key].manufacturer} {state.connectDevice[key] && state.connectDevice[key].product}
+                                {d.manufacturer} {d.product}
                             </div>
                             <div>
-                                {key && state.connect[key] ? "connect" : "disconnect"}
+                                {state.connect[api.deviceId(d)] ? "connect" : "disconnect"}
                             </div>
                         </div>
                     )) : (

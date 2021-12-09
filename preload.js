@@ -1,7 +1,7 @@
 const {contextBridge, ipcRenderer} = require("electron")
 const dayjs = require('dayjs')
 const Store = require("electron-store")
-const {start, stop, writeCommand, connect, isOledOn, getKBDList, typeId} = require(`${__dirname}/qmkrcd`)
+const {start, stop, writeCommand, connect, isOledOn, getKBDList, deviceId} = require(`${__dirname}/qmkrcd`)
 let store
 
 const deviceType = {
@@ -21,27 +21,25 @@ const params = {
 const osSwitchKeys = ["os:win", "os:mac", "os:linux"]
 
 const command = {
-    switchLayerStart: (kbd) => start(deviceType.switchLayer, kbd),
-    switchLayerStop: (kbd) => stop(deviceType.switchLayer, kbd),
-    oledClockStart: (kbd) => start(deviceType.oledClock, kbd),
-    oledClockStop: (kbd) => stop(deviceType.oledClock, kbd),
-    switchLayer: (kbd, n) => writeCommand(deviceType.switchLayer, kbd, {id: 34, data: [n]}),
+    start: (kbd) => start(kbd),
+    stop: (kbd) => stop(kbd),
+    switchLayer: (kbd, n) => writeCommand(kbd, {id: 34, data: [n]}),
     setOledState: async (kbd) => {
-        writeCommand(deviceType.oledClock, kbd, {id: 36})
+        writeCommand(kbd, {id: 36})
         await sleep(300)
     },
-    oledWrite: (kbd, str) => writeCommand(deviceType.oledClock, kbd, {id: 23, data: str}),
+    oledWrite: (kbd, str) => writeCommand(kbd, {id: 23, data: str}),
     getConnectDevices: (type) => {
         if(store) {
-            if(type === deviceType.switchLayer) return store.get('devices').filter(d => d.onSwitchLayer === 1 && d.type === type)
-            return store.get('devices').filter(d => d.onOledClock === 1 && d.type === type)
+            if(type === deviceType.switchLayer) return store.get('devices').filter(d => d.onSwitchButton === 1 && d.type === type)
+            return store.get('devices').filter(d => d.onSwitchButton === 1 && d.type === type)
         }
         return undefined
     },
     getConnectDevice: (type) => {
         if(store) {
-            if(type === deviceType.switchLayer) return store.get('devices').find(d => d.onSwitchLayer === 1 && d.type === type)
-            return store.get('devices').find(d => d.onOledClock === 1 && d.type === type)
+            if(type === deviceType.switchLayer) return store.get('devices').find(d => d.onSwitchButton === 1 && d.type === type)
+            return store.get('devices').find(d => d.onSwitchButton === 1 && d.type === type)
         }
         return undefined
     },
@@ -60,11 +58,9 @@ process.once('loaded', async () => {
             initStore: initStore,
             storePath: () => params.storePath,
             deviceType: deviceType,
-            typeId: typeId,
-            switchLayerStart: command.switchLayerStart,
-            switchLayerStop: command.switchLayerStop,
-            oledClockStart: command.oledClockStart,
-            oledClockStop: command.oledClockStop,
+            deviceId: deviceId,
+            start: command.start,
+            stop: command.stop,
             keyboardSendLoop: keyboardSendLoop,
             getConnectDevice: command.getConnectDevice,
             getConnectDevices: command.getConnectDevices,
@@ -92,7 +88,7 @@ const keyboardSendLoop = async () => {
             const l = device ? device.layers.find(l => l.name === params.onWindowName) : ""
             const currentLayer = l ? l.layer : 0
 
-            const id = typeId(deviceType.switchLayer, device)
+            const id = deviceId(device)
 
             const connectSwitchLayer = connect(id)
             if (params.connect[id] !== connectSwitchLayer) {
@@ -112,23 +108,23 @@ const keyboardSendLoop = async () => {
                     command.switchLayer(device, currentLayer)
                 }
             } else {
-                command.switchLayerStart(device)
+                command.start(device)
             }
             params.lastLayer[id] = currentLayer
         })
         allDevice
             .filter(d => !switchLayerDevices.find(s => s.id === d.id))
-            .map(d => delete params.connect[typeId(deviceType.switchLayer, d)])
+            .map(d => delete params.connect[deviceId(d)])
     }
 
     const oledClockFn = async () => {
         const oledClockDevices = command.getConnectDevices(deviceType.oledClock)
         oledClockDevices.map( async device => {
-            const id = typeId(deviceType.oledClock, device)
+            const id = deviceId(device)
             const connectOledClock = connect(id)
             if (params.connect[id] !== connectOledClock) await command.connectOledClock({kbd: device, isConnected: connectOledClock})
             params.connect[id] = connectOledClock
-            connectOledClock ? await oledWriteNow(device) : command.oledClockStart(device)
+            connectOledClock ? await oledWriteNow(device) : command.start(device)
         })
     }
     

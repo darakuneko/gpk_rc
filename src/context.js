@@ -51,7 +51,7 @@ export function StateProvider({children}) {
 export const createLayerObj = () => {
     return {
         id: uuidv4(),
-        onSwitchLayer: 0,
+        onSwitchButton: 0,
         type: api.deviceType.switchLayer,
         manufacturer: "",
         product: "",
@@ -64,7 +64,7 @@ export const createLayerObj = () => {
 export const createOledClockObj = () => {
     return {
         id: uuidv4(),
-        onOledClock: 0,
+        onSwitchButton: 0,
         manufacturer: "",
         type: api.deviceType.oledClock,
         product: "",

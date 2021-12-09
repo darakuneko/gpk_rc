@@ -35,7 +35,7 @@ const DEFAULT_USAGE = {
     usagePage: 0xFF60
 }
 
-const typeId = (type, device) => `${device.id}`
+const deviceId = (device) => `${device.manufacturer}-${device.product}-${device.vendorId}-${device.productId}`
 
 const getKBD = (device) => HID.devices().find(d =>
     (device ?
@@ -52,11 +52,11 @@ const getKBDList = () => HID.devices().filter(d =>
     d.usagePage === DEFAULT_USAGE.usagePage
 ).sort((a, b) => `${a.manufacturer}${a.product}` > `${b.manufacturer}${b.product}` ? 1 : -1)
 
-const start = (deviceType, device) => {
+const start = (device) => {
     const d = getKBD(device)
     if (d && d.path) {
-        const id = typeId(deviceType, device)
-        try {
+        const id = deviceId(device)
+        if(!kbd[id]){
             kbd[id] = new HID.HID(d.path)
             kbd[id].on('error', (err) => {
                 console.log(err)
@@ -66,16 +66,13 @@ const start = (deviceType, device) => {
                 const str = data.toString()
                 if (str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
             })
-        } catch(e) {
-            console.log(e)
         }
-
         connect[id] = true
     }
 }
 
-const stop = (deviceType, device) => {
-    const id = typeId(deviceType, device)
+const stop = (device) => {
+    const id = deviceId(device)
     if (kbd[id]) {
         kbd[id].removeAllListeners("data")
         if(process.platform === "darwin") kbd[id].close()
@@ -83,8 +80,8 @@ const stop = (deviceType, device) => {
     }
 }
 
-const writeCommand = (deviceType, device, command) => {
-    const id = typeId(deviceType, device)
+const writeCommand = (device, command) => {
+    const id = deviceId(device)
     if (kbd[id]) {
         const bytes = commandToBytes(command)
         kbd[id].write(bytes)
@@ -98,4 +95,4 @@ module.exports.getKBDList = getKBDList
 module.exports.start = start
 module.exports.stop = stop
 module.exports.writeCommand = writeCommand
-module.exports.typeId = typeId
+module.exports.deviceId = deviceId

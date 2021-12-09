@@ -14,10 +14,9 @@ const OledClockEdit = ((props) => {
     const device = props.device
     const classes = useStyles()
 
-    const _handleSwitchChange = (id) => (e) => {
+    const _handleSwitchChange = (device) => (e) => {
         const isChecked = e.currentTarget.checked
-        const obj = handleSwitchChange(state, setState, id, isChecked, api.deviceType.oledClock)
-        obj.isStart ? api.switchLayerStart(obj.device) : api.switchLayerStop(obj.device)
+        handleSwitchChange(state, setState, device, isChecked)
     }
 
     return (<div key={`${device.id}`}>
@@ -25,8 +24,8 @@ const OledClockEdit = ((props) => {
                 <Box m={2}>
                     <Switch
                         className={classes.settingSwitch}
-                        onChange={_handleSwitchChange(device.id)}
-                        checked={device.onOledClock === 1}/>
+                        onChange={_handleSwitchChange(device)}
+                        checked={device.onSwitchButton === 1}/>
                 </Box>
                 <Box m={2}>
                     <TextField
@@ -61,7 +60,7 @@ const OledClockEdit = ((props) => {
                         InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
-                    {device.onOledClock === 0 ? (
+                    {device.onSwitchButton === 0 ? (
                         <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
                                     onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>

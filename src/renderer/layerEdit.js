@@ -20,8 +20,6 @@ import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commo
 
 import {useStateContext} from "../context";
 
-const {api} = window
-
 const LayerEdit = ((props) => {
     const {state, setState} = useStateContext();
     const device = props.device
@@ -55,10 +53,9 @@ const LayerEdit = ((props) => {
         setState(state)
     }
 
-    const _handleSwitchChange = (id) => (e) => {
+    const _handleSwitchChange = (device) => (e) => {
         const isChecked = e.currentTarget.checked
-        const obj = handleSwitchChange(state, setState, id, isChecked, api.deviceType.switchLayer)
-        obj.isStart ? api.switchLayerStart(obj.device) : api.switchLayerStop(obj.device)
+        handleSwitchChange(state, setState, device, isChecked)
     }
 
     return (<div key={`${device.id}`}>
@@ -66,8 +63,8 @@ const LayerEdit = ((props) => {
                 <Box m={2}>
                     <Switch
                         className={classes.settingSwitch}
-                        onChange={_handleSwitchChange(device.id)}
-                        checked={device.onSwitchLayer === 1}/>
+                        onChange={_handleSwitchChange(device)}
+                        checked={device.onSwitchButton === 1}/>
                 </Box>
                 <Box m={2}>
                     <TextField
@@ -102,7 +99,7 @@ const LayerEdit = ((props) => {
                         InputProps={{readOnly: true}}/>
                 </Box>
                 <Box m={2}>
-                    {device.onSwitchLayer === 0 ? (
+                    {device.onSwitchButton === 0 ? (
                         <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
                                     onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>
@@ -113,13 +110,13 @@ const LayerEdit = ((props) => {
             </Box>
             <Box m={2} className={classes.wrapSettingLayer}>
                 <div className={classes.settingLayer}>
-                    {device.onSwitchLayer === 0 ? (
+                    {device.onSwitchButton === 0 ? (
                         <IconButton aria-label="add" fontSize="small" onClick={handleLayerAdd(device.id)}>
                             <Add fontSize="inherit"/>
                         </IconButton>
                     ) : (<span/>)}
                 </div>
-                {device.onSwitchLayer === 0 ? (device.layers && device.layers.map((l, n) => (
+                {device.onSwitchButton === 0 ? (device.layers && device.layers.map((l, n) => (
                             <div key={`edit-${device.id}-${l.layer}-${n}`} className={classes.settingLayer}>
                                 <Box m={2}>
                                     <InputLabel>Layer</InputLabel>

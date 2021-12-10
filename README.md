@@ -6,7 +6,7 @@
 - Write time to OLED
 - This Applcation use custom [qmk_rc](https://github.com/mmalecki/qmk_rc)
 - [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc) QMK compatible
-  version is 0.13.15
+  version is 0.13, 0.14
 
 ## Build
 

@@ -30,6 +30,17 @@ linux
 ```
 
 ## Keybaord Side
+
+### Compatible models
+- GKP60-46A
+- GKP60-46SGR
+- GKP60-46W
+- GKP60-47GR1RE
+- Num-Num Strawberry!!
+- Yamada75 Go
+
+### Apply to my keyboard
+
 download: [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc)
 
 #### qmk/quantum/

@@ -39,7 +39,7 @@ const LayerEdit = ((props) => {
             }
             return d
         })
-        setState(state)
+        setState(state, true)
     }
 
     const handleLayerDelete = (id, layer) => () => {
@@ -50,7 +50,7 @@ const LayerEdit = ((props) => {
             return d
         })
 
-        setState(state)
+        setState(state, true)
     }
 
     const _handleSwitchChange = (device) => (e) => {

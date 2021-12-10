@@ -21,7 +21,7 @@ const params = {
 const osSwitchKeys = ["os:win", "os:mac", "os:linux"]
 
 const command = {
-    start: async (kbd) => {
+    start: (kbd) => {
         start(kbd)
         switchOSlayer(kbd)
     },
@@ -84,13 +84,15 @@ const initStore = () => {
 }
 
 const switchOSlayer = (device) => {
-    const l = device.layers.find(l => osSwitchKeys.includes(l.name))
-    const os = process.platform
-    const isChangeOSLayer = (l && l.name === "os:win" && os === "win32" ||
-        l && l.name === "os:mac" && os === "darwin"||
-        l && l.name === "os:linux" && os === "linux")
+    if(device.type === deviceType.switchLayer){
+        const l = device.layers.find(l => osSwitchKeys.includes(l.name))
+        const os = process.platform
+        const isChangeOSLayer = (l && l.name === "os:win" && os === "win32" ||
+            l && l.name === "os:mac" && os === "darwin"||
+            l && l.name === "os:linux" && os === "linux")
 
-    if(isChangeOSLayer) command.switchLayer(device, l.layer)
+        if(isChangeOSLayer) command.switchLayer(device, l.layer)
+    }
 }
 
 const switchLayer = (device) => {
@@ -101,6 +103,7 @@ const switchLayer = (device) => {
     if (params.lastWindowName !== params.onWindowName && params.lastLayer[id] !== currentLayer) {
         currentLayer === 0 && osLayer ? switchOSlayer(device) : command.switchLayer(device, currentLayer)
     }
+    params.lastLayer[id] = currentLayer
 }
 
 const keyboardSendLoop = async () => {
@@ -117,7 +120,6 @@ const keyboardSendLoop = async () => {
             }
             params.connect[id] = connectSwitchLayer
             connectSwitchLayer ? switchLayer(device) : command.start(device)
-            params.lastLayer[id] = currentLayer
         })
         allDevice
             .filter(d => !switchLayerDevices.find(s => s.id === d.id))

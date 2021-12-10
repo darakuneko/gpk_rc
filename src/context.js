@@ -18,13 +18,14 @@ export function StateProvider({children}) {
         connect: {},
         activeWindow: [],
         mainWindowShow: false,
-        storePath: ""
+        storePath: "",
+        appVersion: ""
     })
 
     const [kbdListState, setKbdList] = useState([])
 
-    const setState = (obj) => {
-        api.setDevices(obj.devices)
+    const setState = (obj, isSetDevice) => {
+        if(isSetDevice) api.setDevices(obj.devices)
         _setState({
             init: obj.init,
             devices: obj.devices,
@@ -33,6 +34,7 @@ export function StateProvider({children}) {
             activeWindow: obj.activeWindow,
             mainWindowShow: obj.mainWindowShow,
             storePath: obj.storePath,
+            appVersion: obj.appVersion
         })
     }
 

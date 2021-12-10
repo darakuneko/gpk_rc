@@ -33,7 +33,7 @@ const KeyboardList = () => {
         obj.vendorId = kbd.vendorId
         obj.productId = kbd.productId
         state.devices.push(obj)
-        setState(state)
+        setState(state, true)
     }
 
     return (
@@ -72,6 +72,9 @@ const KeyboardList = () => {
             </List>
             <List>
                 <ListItem>file: {api.storePath()}</ListItem>
+            </List>
+            <List>
+                <ListItem>version: {state.appVersion}</ListItem>
             </List>
         </Paper>
     )

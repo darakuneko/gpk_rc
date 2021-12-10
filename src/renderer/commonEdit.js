@@ -17,7 +17,7 @@ export const handleTextChange = (state, setState, id, propName, layer) => (e) =>
         }
         return d
     })
-    setState(state)
+    setState(state, true)
 }
 
 export const handleSwitchChange = (state, setState, device, isChecked) => {
@@ -36,12 +36,12 @@ export const handleSwitchChange = (state, setState, device, isChecked) => {
         delete state.connect[deviceId]
         api.stop(device)
     }
-    setState(state)
+    setState(state, true)
 }
 
 export const handleDelete = (state, setState, id) => () => {
     state.devices = state.devices.filter(d => d.id !== id)
-    setState(state)
+    setState(state, true)
 }
 
 export const toHex = (number) => {

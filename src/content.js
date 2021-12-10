@@ -21,6 +21,7 @@ const Content = () => {
     const loadingRef = useRef()
 
     useEffect( () => {
+        api.send("setAppVersion")
         const fn = () => {
             if(state.mainWindowShow) setKbdList(api.getKBDList())
             api.keyboardSendLoop()
@@ -39,7 +40,7 @@ const Content = () => {
         const devices = api.getDevices()
         if(devices) state.devices = devices
         state.init = false
-        setState(state)
+        setState(state, true)
     }, [])
 
     useEffect(() => {
@@ -49,7 +50,7 @@ const Content = () => {
             state.connect[id] = obj.isConnected
             api.getConnectDevices(type).map(d => state.connectDevice[api.deviceId(d)] = d)
             state.devices = api.getDevices()
-            setState(state)
+            setState(state, true)
         }
         api.on("isConnectSwitchLayer", (dat) => set(api.deviceType.switchLayer, dat))
         api.on("isConnectOledClock", (dat) =>  set(api.deviceType.oledClock, dat))
@@ -74,6 +75,12 @@ const Content = () => {
             setState(state)
         })
         return () => {}
+    }, [])
+
+    useEffect( () => {
+        api.on("getAppVersion", (v) => {
+            state.appVersion = v
+            setState(state)})
     }, [])
 
     const handleChange = (event, newValue) => {

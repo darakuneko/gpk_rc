@@ -114,3 +114,7 @@ ipcMain.on("setActiveWindow", async () => {
 ipcMain.on("onWindowShow", async () => {
     mainWindow.webContents.send("windowShow", true)
 })
+
+ipcMain.on("setAppVersion", async () => {
+    mainWindow.webContents.send("getAppVersion", app.getVersion())
+})

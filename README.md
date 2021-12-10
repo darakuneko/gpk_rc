@@ -1,5 +1,6 @@
 # GPK RC
-![GPK RC](https://github.com/darakuneko/gpk_rc/raw/main/img/gpkrc.png)
+[![Hot to GPK RC](https://github.com/darakuneko/gpk_rc/raw/main/img/how_to_use_gpk_rc.gif)](https://youtu.be/g3gRi1g3p_s)
+
 ## QMK Remote Controller Application
 
 - Automatic layer switching
@@ -29,6 +30,24 @@ linux
 ```
 
 ## Keybaord Side
+
+### Compatible models
+- GPK60-33R
+- GPK60-45C
+- GKP60-46A
+- GKP60-46SGR
+- GKP60-46W
+- GKP60-47GR1RE
+- GPK60-51O
+- GPK60-51R
+- GPK60-55O
+- GPK60-60R
+- GPK60-65O
+- Num-Num Strawberry!!
+- Yamada75 Go
+
+### Apply to my keyboard
+
 download: [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc)
 
 #### qmk/quantum/

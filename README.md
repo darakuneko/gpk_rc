@@ -1,5 +1,6 @@
 # GPK RC
-![GPK RC](https://github.com/darakuneko/gpk_rc/raw/main/img/gpkrc.png)
+![Hot to GPK RC](https://github.com/darakuneko/gpk_rc/raw/main/img/how_to_use_gpk_rc.gif)
+
 ## QMK Remote Controller Application
 
 - Automatic layer switching

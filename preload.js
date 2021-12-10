@@ -21,7 +21,10 @@ const params = {
 const osSwitchKeys = ["os:win", "os:mac", "os:linux"]
 
 const command = {
-    start: (kbd) => start(kbd),
+    start: async (kbd) => {
+        start(kbd)
+        switchOSlayer(kbd)
+    },
     stop: (kbd) => stop(kbd),
     switchLayer: (kbd, n) => writeCommand(kbd, {id: 34, data: [n]}),
     setOledState: async (kbd) => {
@@ -30,15 +33,16 @@ const command = {
     },
     oledWrite: (kbd, str) => writeCommand(kbd, {id: 23, data: str}),
     getConnectDevices: (type) => {
-        if(store) {
-            if(type === deviceType.switchLayer) return store.get('devices').filter(d => d.onSwitchButton === 1 && d.type === type)
+        if (store) {
+            if (type === deviceType.switchLayer) return store.get('devices').filter(d => d.onSwitchButton === 1 && d.type === type)
             return store.get('devices').filter(d => d.onSwitchButton === 1 && d.type === type)
         }
+
         return undefined
     },
     getConnectDevice: (type) => {
-        if(store) {
-            if(type === deviceType.switchLayer) return store.get('devices').find(d => d.onSwitchButton === 1 && d.type === type)
+        if (store) {
+            if (type === deviceType.switchLayer) return store.get('devices').find(d => d.onSwitchButton === 1 && d.type === type)
             return store.get('devices').find(d => d.onSwitchButton === 1 && d.type === type)
         }
         return undefined
@@ -79,36 +83,40 @@ const initStore = () => {
     return store
 }
 
+const switchOSlayer = (device) => {
+    const l = device.layers.find(l => osSwitchKeys.includes(l.name))
+    const os = process.platform
+    const isChangeOSLayer = (l && l.name === "os:win" && os === "win32" ||
+        l && l.name === "os:mac" && os === "darwin"||
+        l && l.name === "os:linux" && os === "linux")
+
+    if(isChangeOSLayer) command.switchLayer(device, l.layer)
+}
+
+const switchLayer = (device) => {
+    const id = deviceId(device)
+    const osLayer = device ? device.layers.find(l => osSwitchKeys.includes(l.name)) : ""
+    const appLayer = device ? device.layers.find(l => l.name === params.onWindowName) : ""
+    const currentLayer = appLayer ? appLayer.layer : 0
+    if (params.lastWindowName !== params.onWindowName && params.lastLayer[id] !== currentLayer) {
+        currentLayer === 0 && osLayer ? switchOSlayer(device) : command.switchLayer(device, currentLayer)
+    }
+}
+
 const keyboardSendLoop = async () => {
 
     const switchLayerFn = async () => {
         const allDevice = command.getDevices().filter(d => d.type === deviceType.switchLayer)
         const switchLayerDevices = command.getConnectDevices(deviceType.switchLayer)
-        switchLayerDevices.map( async device => {
-            const l = device ? device.layers.find(l => l.name === params.onWindowName) : ""
-            const currentLayer = l ? l.layer : 0
-
+        switchLayerDevices.map(async device => {
             const id = deviceId(device)
             const connectSwitchLayer = connect(id)
             if (params.connect[id] !== connectSwitchLayer) {
-                await command.connectSwitchLayer({kbd: device, isConnected:connectSwitchLayer})
-                if(connectSwitchLayer) {
-                    const l = device.layers.find(l => osSwitchKeys.includes(l.name))
-                    const os = process.platform
-                    if(l && l.name === "os:win" && os === "win32") command.switchLayer(device, l.layer)
-                    if(l && l.name === "os:mac" && os === "darwin") command.switchLayer(device, l.layer)
-                    if(l && l.name === "os:linux" && os === "linux") command.switchLayer(device, l.layer)
-                }
+                await command.connectSwitchLayer({kbd: device, isConnected: connectSwitchLayer})
+                if (connectSwitchLayer) switchOSlayer(device)
             }
             params.connect[id] = connectSwitchLayer
-
-            if (connectSwitchLayer) {
-                if (params.lastWindowName !== params.onWindowName && params.lastLayer[id] !== currentLayer) {
-                    command.switchLayer(device, currentLayer)
-                }
-            } else {
-                command.start(device)
-            }
+            connectSwitchLayer ? switchLayer(device) : command.start(device)
             params.lastLayer[id] = currentLayer
         })
         allDevice
@@ -118,15 +126,18 @@ const keyboardSendLoop = async () => {
 
     const oledClockFn = async () => {
         const oledClockDevices = command.getConnectDevices(deviceType.oledClock)
-        oledClockDevices.map( async device => {
+        oledClockDevices.map(async device => {
             const id = deviceId(device)
             const connectOledClock = connect(id)
-            if (params.connect[id] !== connectOledClock) await command.connectOledClock({kbd: device, isConnected: connectOledClock})
+            if (params.connect[id] !== connectOledClock) await command.connectOledClock({
+                kbd: device,
+                isConnected: connectOledClock
+            })
             params.connect[id] = connectOledClock
             connectOledClock ? await oledWriteNow(device) : command.start(device)
         })
     }
-    
+
     const activeWindowNameFn = async () => {
         if (params.lastWindowName !== params.onWindowName) await command.changeActiveWindow()
         params.lastWindowName = params.onWindowName

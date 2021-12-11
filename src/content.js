@@ -27,7 +27,7 @@ const Content = () => {
             api.keyboardSendLoop()
         }
         try{
-            setInterval(fn, 300)
+            setInterval(fn, 600)
         } catch (e) {
             console.log("error timer")
         }

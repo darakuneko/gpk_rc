@@ -26,7 +26,11 @@ const command = {
         switchOSlayer(kbd)
     },
     stop: (kbd) => stop(kbd),
-    switchLayer: (kbd, n) => writeCommand(kbd, {id: 34, data: [n]}),
+    switchLayer: (kbd, n) => {
+        console.log(kbd)
+        console.log(n)
+        writeCommand(kbd, {id: 34, data: [n]})
+    },
     setOledState: async (kbd) => {
         writeCommand(kbd, {id: 36})
         await sleep(300)
@@ -94,7 +98,10 @@ const switchOSlayer = (device) => {
             l && l.name === "os:mac" && os === "darwin"||
             l && l.name === "os:linux" && os === "linux")
 
-        if(isChangeOSLayer) command.switchLayer(device, l.layer)
+        if(isChangeOSLayer) {
+            console.log(isChangeOSLayer)
+            command.switchLayer(device, l.layer)
+        }
     }
 }
 
@@ -103,7 +110,10 @@ const switchLayer = (device) => {
     const osLayer = device ? device.layers.find(l => osSwitchKeys.includes(l.name)) : ""
     const appLayer = device ? device.layers.find(l => l.name === params.onWindowName) : ""
     const currentLayer = appLayer ? appLayer.layer : 0
+    console.log(`${params.lastWindowName} !== ${params.onWindowName} && ${params.lastLayer[id]} !== ${currentLayer}`)
+
     if (params.lastWindowName !== params.onWindowName && params.lastLayer[id] !== currentLayer) {
+        console.log("match")
         currentLayer === 0 && osLayer ? switchOSlayer(device) : command.switchLayer(device, currentLayer)
     }
     params.lastLayer[id] = currentLayer

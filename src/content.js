@@ -36,7 +36,9 @@ const Content = () => {
 
     useEffect( () => {
         const connectDevices = Object.values(api.deviceType).map(type => api.getConnectDevices(type)).flat()
-        connectDevices.forEach(d => state.connectDevice[api.deviceId(d)] = d)
+        connectDevices.forEach(d => {
+            if(d) state.connectDevice[api.deviceId(d)] = d
+        })
         const devices = api.getDevices()
         if(devices) state.devices = devices
         state.init = false

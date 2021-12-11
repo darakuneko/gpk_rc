@@ -33,9 +33,12 @@ const command = {
     },
     oledWrite: (kbd, str) => writeCommand(kbd, {id: 23, data: str}),
     getConnectDevices: (type) => {
-        if (store) {
-            if (type === deviceType.switchLayer) return store.get('devices').filter(d => d.onSwitchButton === 1 && d.type === type)
-            return store.get('devices').filter(d => d.onSwitchButton === 1 && d.type === type)
+        const connectDevices = store.get('devices')
+        if (connectDevices) {
+            if (type === deviceType.switchLayer) {
+                return connectDevices.filter(d => d.onSwitchButton === 1 && d.type === type)
+            }
+            return connectDevices.filter(d => d.onSwitchButton === 1 && d.type === type)
         }
 
         return undefined

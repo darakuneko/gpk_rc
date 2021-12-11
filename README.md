@@ -63,7 +63,6 @@ make git-submodule
 
 copy&replace qmk_rc.h,via.c,via.h
 
-make git-submodule
 #### qmk/keyboards/"my keyboard"
 
 copy qmk_rc.c

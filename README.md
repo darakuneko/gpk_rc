@@ -60,11 +60,11 @@ cd qmk_firmware
 make git-submodule
 ```
 
-#### qmk/quantum/
+#### qmk_firmwar/quantum/
 
 copy&replace qmk_rc.h,via.c,via.h
 
-#### qmk/keyboards/"my keyboard"
+#### qmk_firmwar/keyboards/"my keyboard"
 
 copy qmk_rc.c
 

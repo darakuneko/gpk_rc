@@ -49,7 +49,7 @@ linux
 
 ### Apply to my keyboard
 
-download: [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc)
+download: [custom qmk_rc&via](https://github.com/darakuneko/keyboard/raw/main/qmk/custom_qmkrc.zip)
 
 #### If QMK clone
 

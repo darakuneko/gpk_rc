@@ -68,7 +68,7 @@ copy&replace qmk_rc.h,via.c,via.h
 
 copy qmk_rc.c
 
-#### rule.mk
+#### rules.mk
 
 ```SRC += qmk_rc.c```
 

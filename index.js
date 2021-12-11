@@ -66,7 +66,7 @@ app.on('ready', () => {
         mainWindowShow(mainWindow)
     })
     createWindow()
-    mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 })
 
 const mainWindowShow = (mainWindow) => {

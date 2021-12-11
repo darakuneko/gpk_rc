@@ -9,7 +9,7 @@
 - [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc) QMK compatible
   version is 0.13, 0.14.0 to 0.14.32
 - Do not use above 0.14.33  
-- Use at the same time as VIA/Remap
+- Support VIA/Remap
 
 ## Build
 

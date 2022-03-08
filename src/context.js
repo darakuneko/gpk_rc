@@ -59,7 +59,7 @@ export const createLayerObj = () => {
         product: "",
         vendorId: "",
         productId: "",
-        layers: [{name: "", layer: 1}]
+        layers: [{name: "", layer: 0}]
     }
 }
 

@@ -24,7 +24,7 @@ const LayerEdit = ((props) => {
     const {state, setState} = useStateContext();
     const device = props.device
     const classes = useStyles()
-    const selectArr = [...Array(20).keys()].map(i => ++i);
+    const selectArr = [...Array(20).keys()]
 
     const handleLayerAdd = (id) => () => {
         state.devices = state.devices.map(d => {
@@ -34,7 +34,7 @@ const LayerEdit = ((props) => {
                     d.layers.push({name: "", layer: parseInt(l) + 1})
                     d.layers.sort((a, b) => a.layer - b.layer)
                 } else {
-                    d.layers = [{name: "", layer: 1}]
+                    d.layers = [{name: "", layer: 0}]
                 }
             }
             return d

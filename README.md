@@ -35,19 +35,9 @@ linux
 ## Keybaord Side
 
 ### Compatible models
-- GPK60-33R
-- GPK60-45C
-- GKP60-46A
-- GKP60-46SGR
-- GKP60-46W
-- GKP60-47GR1RE
-- GPK60-51O
-- GPK60-51R
-- GPK60-55O
-- GPK60-60R
-- GPK60-65O
+- GPK60 Series
+- Yamada Series
 - Num-Num Strawberry!!
-- Yamada75 Go
 
 ### Apply to my keyboard
 

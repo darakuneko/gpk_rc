@@ -1,5 +1,6 @@
 # GPK RC
 [![Hot to GPK RC](https://github.com/darakuneko/gpk_rc/raw/main/img/how_to_use_gpk_rc.gif)](https://youtu.be/g3gRi1g3p_s)
+[![](https://img.youtube.com/vi/d3974UKRs38/0.jpg)](https://www.youtube.com/watch?v=d3974UKRs38)
 
 ## QMK Remote Controller Application
 
@@ -60,11 +61,11 @@ cd qmk_firmware
 make git-submodule
 ```
 
-#### qmk_firmwar/quantum/
+#### qmk_firmware/quantum/
 
 copy&replace qmk_rc.h,via.c,via.h
 
-#### qmk_firmwar/keyboards/"my keyboard"
+#### qmk_firmware/keyboards/"my keyboard"
 
 copy qmk_rc.c
 

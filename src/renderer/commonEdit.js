@@ -1,6 +1,6 @@
 const {api} = window
 
-export const handleTextChange = (state, setState, id, propName, layer) => (e) => {
+export const handleTextChange = (state, setState, id, propName, layer, layerIndex) => (e) => {
     const value = propName === "layer" ? parseInt(e.currentTarget.getAttribute("data-value")) : e.currentTarget.value.trim()
 
     state.devices = state.devices.map(d => {
@@ -9,8 +9,8 @@ export const handleTextChange = (state, setState, id, propName, layer) => (e) =>
             if (propName === "product") d.product = value
             if (propName === "vendorId") d.vendorId = parseInt(value)
             if (propName === "productId") d.productId = parseInt(value)
-            if (propName === "layer") d.layers = d.layers.map(l => l.layer === layer ? {layer: value, name: l.name} : l)
-            if (propName === "layer_name") d.layers = d.layers.map(l => l.layer === layer ? {
+            if (propName === "layer") d.layers = d.layers.map((l, i) => l.layer === layer && i === layerIndex ? {layer: value, name: l.name} : l)
+            if (propName === "layer_name") d.layers = d.layers.map((l, i) => l.layer === layer && i === layerIndex ? {
                 layer: layer,
                 name: value
             } : l)

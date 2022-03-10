@@ -28,28 +28,17 @@ const LayerEdit = ((props) => {
 
     const handleLayerAdd = (id) => () => {
         state.devices = state.devices.map(d => {
-            if (d.id === id) {
-                if (d.layers.length > 0) {
-                    const l = d.layers.sort((a, b) => b.layer - a.layer)[0].layer
-                    d.layers.push({name: "", layer: parseInt(l) + 1})
-                    d.layers.sort((a, b) => a.layer - b.layer)
-                } else {
-                    d.layers = [{name: "", layer: 0}]
-                }
-            }
+            if (d.id === id) d.layers.push({name: "", layer: 0})
             return d
         })
         setState(state, true)
     }
 
-    const handleLayerDelete = (id, layer) => () => {
+    const handleLayerDelete = (id, layerIndex) => () => {
         state.devices = state.devices.map(d => {
-            if (d.id === id) {
-                d.layers = d.layers.filter(l => l.layer !== layer)
-            }
+            if (d.id === id) d.layers = d.layers.filter((_, i) => i !== layerIndex)
             return d
         })
-
         setState(state, true)
     }
 
@@ -116,18 +105,18 @@ const LayerEdit = ((props) => {
                         </IconButton>
                     ) : (<span/>)}
                 </div>
-                {device.onSwitchButton === 0 ? (device.layers && device.layers.map((l, n) => (
-                            <div key={`edit-${device.id}-${l.layer}-${n}`} className={classes.settingLayer}>
+                {device.onSwitchButton === 0 ? (device.layers && device.layers.map((l, i) => (
+                            <div key={`edit-${device.id}-${l.layer}-${i}`} className={classes.settingLayer}>
                                 <Box m={2}>
                                     <InputLabel>Layer</InputLabel>
                                     <Select
                                         value={l.layer}
                                         label="Layer"
-                                        onChange={handleTextChange(state, setState, device.id, "layer", l.layer, `layer-${device.id}-${l.layer}`, "select")}
+                                        onChange={handleTextChange(state, setState, device.id, "layer", l.layer, i)}
                                     >
                                         {selectArr.map(i => (
                                             <MenuItem key={`layer-select-${l.layer}-${i}`} value={i}
-                                                      disabled={device.layers.map(l => l.layer).includes(i)}>{i}</MenuItem>
+                                                      >{i}</MenuItem>
                                         ))}
                                     </Select>
                                 </Box>
@@ -135,13 +124,13 @@ const LayerEdit = ((props) => {
                                     <TextField
                                         label="application"
                                         variant="filled"
-                                        onChange={handleTextChange(state, setState, device.id, "layer_name", l.layer)}
-                                        defaultValue={l.name}
+                                        onChange={handleTextChange(state, setState, device.id, "layer_name", l.layer, i)}
+                                        value={l.name}
                                         className={classes.settingLayerAdd}/>
                                 </Box>
                                 <Box m={2}>
                                     <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
-                                                onClick={handleLayerDelete(device.id, l.layer)}>
+                                                onClick={handleLayerDelete(device.id, i)}>
                                         <Delete fontSize="inherit"/>
                                     </IconButton>
                                 </Box>
@@ -157,9 +146,9 @@ const LayerEdit = ((props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {device.layers && device.layers.map(l => (
+                            {device.layers && device.layers.map((l, i) => (
                                 <TableRow
-                                    key={`read-${device.id}-${l.layer}`}
+                                    key={`read-${device.id}-${l.layer}-${i}`}
                                     sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                 >
                                     <TableCell component="th" scope="row">

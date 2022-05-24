@@ -1,7 +1,7 @@
 const {api} = window
 
 export const handleTextChange = (state, setState, id, propName, layer, layerIndex) => (e) => {
-    const value = propName === "layer" ? parseInt(e.currentTarget.getAttribute("data-value")) : e.currentTarget.value.trim()
+    const value = propName === "layer" ? parseInt(e.target.value) : e.target.value.trim()
 
     state.devices = state.devices.map(d => {
         if (id === d.id) {
@@ -20,10 +20,11 @@ export const handleTextChange = (state, setState, id, propName, layer, layerInde
     setState(state, true)
 }
 
-export const handleSwitchChange = (state, setState, device, isChecked) => {
+export const handleSwitchChange = (state, setState, device, isChecked, type) => {
     const deviceId = api.deviceId(device)
+
     state.devices = state.devices.map(d => {
-        if (api.deviceId(d) === deviceId) isChecked ? d.onSwitchButton = 1 : d.onSwitchButton = 0
+        if (api.deviceId(d) === deviceId && type === d.type) isChecked ? d.onSwitchButton = 1 : d.onSwitchButton = 0
         return d
     })
 

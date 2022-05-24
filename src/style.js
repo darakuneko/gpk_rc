@@ -1,11 +1,13 @@
-import {createStyles, createTheme, makeStyles, responsiveFontSizes} from "@material-ui/core/styles";
+import {createTheme} from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
+import {Box, Typography, Switch, IconButton, TextField, TableCell} from "@mui/material";
 
-const theme_base = createTheme({
+export const theme = createTheme({
     palette: {
         primary: {
             main: "#90caf9"
         },
-        type: "dark",
+        mode: "dark",
     },
     props: {
         MuiLink: {
@@ -14,62 +16,51 @@ const theme_base = createTheme({
     }
 })
 
-export const theme = responsiveFontSizes(theme_base)
-const useStylesBase = (theme) => makeStyles(() =>
-    createStyles({
-        deviceStatus: {
-            paddingLeft: "10px",
-            display: "flex",
-        },
-        device: {
-            paddingRight: "40px"
-        },
-        tabs: {
-            paddingTop: "40px",
-        },
-        settings: {},
-        settingsTitle: {
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            alignItems: "center",
-            paddingLeft: "10px"
-        },
-        settingsPrecautionary: {
-            paddingLeft: "10px",
-            color: theme.palette.primary.main
-        },
-        activeWindowTitle: {
-            display: "flex",
-            minHeight: "48px",
-            alignItems: "center",
-            paddingLeft: "10px"
-        },
-        activeWindowDescription: {
-            color: theme.palette.primary.main
-        },
-        settingInputs: {
-            display: "flex"
-        },
-        settingSwitch: {
-            paddingTop: "10px"
-        },
-        settingDelete: {
-            paddingTop: "6px"
-        },
-        wrapSettingLayer: {
-            paddingRight: "70px"
-        },
-        settingLayer: {
-            display: "flex",
-            justifyContent: "end",
-        },
-        settingLayerRead: {},
-        settingLayerAdd: {
-            paddingRight: "40px"
-        }
-    })
-)
-const useStyles = useStylesBase(theme)
+export const ActiveWindowTitle = styled(Typography)({
+    display: "flex",
+    minHeight: "48px",
+    alignItems: "center",
+    paddingLeft: "10px"
+})
 
-export default useStyles
+export const SettingsTitle = styled(Typography)({
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+    alignItems: "center",
+    paddingLeft: "10px"
+})
+
+export const SettingsPrecautionary = styled("div")({
+    paddingLeft: "10px",
+    color: theme.palette.primary.main
+})
+
+export const SettingInputs = styled(Box)({
+    display: "flex"
+})
+
+export const SettingSwitch = styled(Switch)({
+    paddingTop: "10px"
+});
+
+export const SettingDelete = styled(IconButton)({
+    paddingTop: "16px"
+})
+
+export const WrapSettingLayer = styled("div")({
+    paddingRight: "70px"
+})
+
+export const SettingLayer = styled("div")({
+    display: "flex",
+    justifyContent: "end",
+})
+
+export const SettingLayerInput = styled(Box)({
+    marginTop: "-6px"
+})
+
+export const SettingLayerAdd = styled(TextField)({
+    paddingRight: "40px"
+})

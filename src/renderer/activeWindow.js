@@ -1,30 +1,33 @@
 import React from 'react'
 import {useStateContext} from "../context"
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@mui/material/Paper";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import {styled} from "@mui/material/styles";
+import {ActiveWindowTitle, theme} from "../style";
 
-import useStyles from "../style";
+
+const ActiveWindowDescription = styled(ListItem)({
+    color: theme.palette.primary.main
+})
 
 const ActiveWindow = () => {
     const {state} = useStateContext()
-    const classes = useStyles()
     const description = "Open the application used for layer switching. \n Please Copy & Paste to layer's application."
     const brText = description.split("\n").map((line, key) => <span key={key}>{line}<br/></span>);
 
     return (
-        <Paper elevation={0} className={classes.settings}>
-            <Typography component="h1" variant="h6" color="inherit" className={classes.activeWindowTitle}>
+        <Paper elevation={0}>
+            <ActiveWindowTitle component="h1" variant="h6" color="inherit">
                 <div>Latest ActiveWindows 10</div>
-            </Typography>
+            </ActiveWindowTitle>
             <List>
-                <ListItem key={`active-window-description`} className={classes.activeWindowDescription}>
+                <ActiveWindowDescription key={`active-window-description`}>
                     <ListItemText
                         primary={brText}
                     />
-                </ListItem>
+                </ActiveWindowDescription>
                 {state.activeWindow.map((a, i) => (
                     <ListItem key={`active-window-${i}`}>
                         <ListItemText primary={a}/>

@@ -1,13 +1,20 @@
 import React from "react";
-
-import useStyles from "../style";
+import {styled} from "@mui/material/styles";
 import {useStateContext} from "../context";
+
+const DeviceStatus = styled("div")({
+    paddingLeft: "10px",
+    display: "flex",
+})
+
+const Device = styled("div")({
+    paddingRight: "40px"
+})
 
 const CommonConnectDevice = ((props) => {
     const {state} = useStateContext();
     const deviceType = props.deviceType
 
-    const classes = useStyles()
     const devices = () => {
         if(!state.connectDevice) return undefined
         const devices  = state.devices.filter(d => d.type === deviceType)
@@ -16,22 +23,22 @@ const CommonConnectDevice = ((props) => {
     }
     return (<span>
             {state.init ? (
-                <div className={classes.deviceStatus}>
+                <DeviceStatus>
                     <div>initializing...</div>
-                </div>
+                </DeviceStatus>
             ) : (
                 <div>
                     {devices().length > 0 ? devices().map((d,i) => (
-                        <div className={classes.deviceStatus} key={`connectDevice-${deviceType}-${i}`}>
-                            <div className={classes.device}>
+                        <DeviceStatus key={`connectDevice-${deviceType}-${i}`}>
+                            <Device>
                                 {d.manufacturer} {d.product}
-                            </div>
+                            </Device>
                             <div>
                                 {state.connect[api.deviceId(d)] ? "connect" : "disconnect"}
                             </div>
-                        </div>
+                        </DeviceStatus>
                     )) : (
-                        <div className={classes.deviceStatus}>no device</div>
+                        <DeviceStatus>no device</DeviceStatus>
                     )}
                 </div>
             )}

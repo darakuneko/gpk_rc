@@ -1,8 +1,7 @@
 import React from "react";
 
-import useStyles from "../style";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import {settingsPrecautionary, SettingsTitle } from "../style";
+import Paper from "@mui/material/Paper";
 import OledClockEdit from "./oledClockEdit";
 
 import {useStateContext} from "../context";
@@ -13,14 +12,13 @@ const {api} = window
 const OledClock = (() => {
     const {state} = useStateContext();
 
-    const classes = useStyles()
     return (
-        <Paper elevation={0} className={classes.settings}>
-            <Typography component="h1" variant="h6" color="inherit" className={classes.settingsTitle}>
+        <Paper elevation={0}>
+            <SettingsTitle component="h1" variant="h6" color="inherit">
                 <div>Connect Keyboard</div>
-            </Typography>
+            </SettingsTitle>
             <CommonConnectDevice deviceType={api.deviceType.oledClock} />
-            <div className={classes.settingsPrecautionary}>Do not connect while using remap.</div>
+            <div className={settingsPrecautionary}>Do not connect while using remap.</div>
             <div>
                 {state.devices && state.devices.filter(d => d.type === api.deviceType.oledClock).map(d => (
                     <div key={`${d.id}`}><OledClockEdit device={d}/></div>))}

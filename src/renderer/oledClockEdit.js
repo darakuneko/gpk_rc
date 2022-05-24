@@ -1,18 +1,15 @@
 import React from "react";
 
-import useStyles from "../style";
-import Box from "@material-ui/core/Box";
-import TextField from "@material-ui/core/TextField";
-import Switch from "@material-ui/core/Switch";
-import {IconButton} from "@material-ui/core";
-import Delete from '@material-ui/icons/Delete';
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Delete from '@mui/icons-material/Delete';
 import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
 import {useStateContext} from "../context";
+import {SettingDelete, SettingInputs, SettingSwitch} from "../style";
 
 const OledClockEdit = ((props) => {
     const {state, setState} = useStateContext();
     const device = props.device
-    const classes = useStyles()
 
     const _handleSwitchChange = (device) => (e) => {
         const isChecked = e.currentTarget.checked
@@ -20,10 +17,9 @@ const OledClockEdit = ((props) => {
     }
 
     return (<div key={`${device.id}`}>
-            <Box m={2} className={classes.settingInputs}>
+            <SettingInputs m={2}>
                 <Box m={2}>
-                    <Switch
-                        className={classes.settingSwitch}
+                    <SettingSwitch
                         onChange={_handleSwitchChange(device)}
                         checked={device.onSwitchButton === 1}/>
                 </Box>
@@ -61,14 +57,14 @@ const OledClockEdit = ((props) => {
                 </Box>
                 <Box m={2}>
                     {device.onSwitchButton === 0 ? (
-                        <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
+                        <SettingDelete aria-label="delete" fontSize="large"
                                     onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>
-                        </IconButton>
+                        </SettingDelete>
                     ) : (<div/>)
                     }
                 </Box>
-            </Box>
+            </SettingInputs>
         </div>
     )
 })

@@ -1,7 +1,7 @@
 const {api} = window
 
 export const handleTextChange = (state, setState, id, propName, layer, layerIndex) => (e) => {
-    const value = propName === "layer" ? parseInt(e.currentTarget.getAttribute("data-value")) : e.currentTarget.value.trim()
+    const value = propName === "layer" ? parseInt(e.target.value) : e.target.value.trim()
 
     state.devices = state.devices.map(d => {
         if (id === d.id) {

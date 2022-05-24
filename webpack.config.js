@@ -6,7 +6,6 @@ module.exports = [{
     mode: 'development',
     entry: {
         app: './src',
-
     },
     output: {
         filename: "[name].js",
@@ -23,12 +22,8 @@ module.exports = [{
         rules: [
             {
                 test: /\.js?$/,
+                use: ['babel-loader'],
                 exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader', options: {presets: [['env', {'modules': false}], "react"]}
-                    }
-                ]
             }
         ]
     },

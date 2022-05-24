@@ -1,29 +1,35 @@
 import React from "react";
 
-import useStyles from "../style";
-import Box from "@material-ui/core/Box";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Switch from "@material-ui/core/Switch";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
-import {IconButton} from "@material-ui/core";
-import Add from '@material-ui/icons/Add';
-import Delete from '@material-ui/icons/Delete';
+import {IconButton} from "@mui/material";
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
 import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
 
 import {useStateContext} from "../context";
+import {
+    SettingInputs,
+    SettingSwitch,
+    SettingDelete,
+    WrapSettingLayer,
+    SettingLayer,
+    SettingLayerAdd,
+    SettingLayerInput
+} from "../style";
 
 const LayerEdit = ((props) => {
     const {state, setState} = useStateContext();
     const device = props.device
-    const classes = useStyles()
     const selectArr = [...Array(20).keys()]
 
     const handleLayerAdd = (id) => () => {
@@ -48,10 +54,9 @@ const LayerEdit = ((props) => {
     }
 
     return (<div key={`${device.id}`}>
-            <Box m={2} className={classes.settingInputs}>
+            <SettingInputs m={2}>
                 <Box m={2}>
-                    <Switch
-                        className={classes.settingSwitch}
+                    <SettingSwitch
                         onChange={_handleSwitchChange(device)}
                         checked={device.onSwitchButton === 1}/>
                 </Box>
@@ -89,25 +94,25 @@ const LayerEdit = ((props) => {
                 </Box>
                 <Box m={2}>
                     {device.onSwitchButton === 0 ? (
-                        <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
+                        <SettingDelete aria-label="delete" fontSize="large"
                                     onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>
-                        </IconButton>
+                        </SettingDelete>
                     ) : (<div/>)
                     }
                 </Box>
-            </Box>
-            <Box m={2} className={classes.wrapSettingLayer}>
-                <div className={classes.settingLayer}>
+            </SettingInputs>
+            <WrapSettingLayer m={2}>
+                <SettingLayer>
                     {device.onSwitchButton === 0 ? (
                         <IconButton aria-label="add" fontSize="small" onClick={handleLayerAdd(device.id)}>
                             <Add fontSize="inherit"/>
                         </IconButton>
                     ) : (<span/>)}
-                </div>
+                </SettingLayer>
                 {device.onSwitchButton === 0 ? (device.layers && device.layers.map((l, i) => (
-                            <div key={`edit-${device.id}-${l.layer}-${i}`} className={classes.settingLayer}>
-                                <Box m={2}>
+                            <SettingLayer key={`edit-${device.id}-${l.layer}-${i}`}>
+                                <SettingLayerInput m={2}>
                                     <InputLabel>Layer</InputLabel>
                                     <Select
                                         value={l.layer}
@@ -119,26 +124,26 @@ const LayerEdit = ((props) => {
                                                       >{i}</MenuItem>
                                         ))}
                                     </Select>
-                                </Box>
+                                </SettingLayerInput>
                                 <Box m={2}>
-                                    <TextField
+                                    <SettingLayerAdd
                                         label="application"
                                         variant="filled"
                                         onChange={handleTextChange(state, setState, device.id, "layer_name", l.layer, i)}
                                         value={l.name}
-                                        className={classes.settingLayerAdd}/>
+                                        />
                                 </Box>
                                 <Box m={2}>
-                                    <IconButton className={classes.settingDelete} aria-label="delete" fontSize="large"
+                                    <SettingDelete aria-label="delete" fontSize="large"
                                                 onClick={handleLayerDelete(device.id, i)}>
                                         <Delete fontSize="inherit"/>
-                                    </IconButton>
+                                    </SettingDelete>
                                 </Box>
-                            </div>
+                            </SettingLayer>
                         )
                     )
                 ) : (
-                    <Table aria-label="sticky table" className={classes.settingLayerRead}>
+                    <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Layer</TableCell>
@@ -160,7 +165,7 @@ const LayerEdit = ((props) => {
                         </TableBody>
                     </Table>
                 )}
-            </Box>
+            </WrapSettingLayer>
         </div>
     )
 })

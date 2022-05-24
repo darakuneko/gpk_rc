@@ -1,8 +1,7 @@
 import React from "react";
 
-import useStyles from "../style";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import {SettingsPrecautionary, SettingsTitle} from "../style";
+import Paper from "@mui/material/Paper";
 import LayerEdit from "./layerEdit";
 
 import {useStateContext} from "../context";
@@ -13,15 +12,14 @@ const {api} = window
 const Layer = (() => {
     const {state} = useStateContext();
 
-    const classes = useStyles()
     return (
-        <Paper elevation={0} className={classes.settings}>
-            <Typography component="h1" variant="h6" color="inherit" className={classes.settingsTitle}>
+        <Paper elevation={0}>
+            <SettingsTitle component="h1" variant="h6" color="inherit">
                 <div>Connect Keyboard</div>
-            </Typography>
+            </SettingsTitle>
             <CommonConnectDevice deviceType={api.deviceType.switchLayer} />
-            <div className={classes.settingsPrecautionary}>Reserved Words to switch layer when connecting - os:win os:mac os:linux</div>
-            <div className={classes.settingsPrecautionary}>Do not connect while using remap</div>
+            <SettingsPrecautionary>Reserved Words to switch layer when connecting - os:win os:mac os:linux</SettingsPrecautionary>
+            <SettingsPrecautionary>Do not connect while using remap</SettingsPrecautionary>
             <div>
                 {state.devices && state.devices.filter(d => d.type === api.deviceType.switchLayer).map(d => (
                     <div key={`${d.id}`}><LayerEdit device={d}/></div>))}

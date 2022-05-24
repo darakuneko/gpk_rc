@@ -3,21 +3,21 @@ import Layer from "./renderer/layer"
 import ActiveWindow from "./renderer/activeWindow"
 import OledClock from "./renderer/oledClock"
 import KeyboardList from "./renderer/keyboardList"
+import { css } from "@emotion/react";
 
-import Box from "@material-ui/core/Box"
-import Tabs from "@material-ui/core/Tabs"
-import Tab from "@material-ui/core/Tab"
+import Box from "@mui/material/Box"
+import Tabs from "@mui/material/Tabs"
+import Tab from "@mui/material/Tab"
 
 const {api} = window
 
 import {useStateContext} from "./context"
 
-import useStyles from "./style";
+const style = css`paddingTop: "40px"`;
 
 const Content = () => {
     const { state, setState, setKbdList} = useStateContext()
     const [ tab, setTab] = useState(0)
-    const classes = useStyles()
     const loadingRef = useRef()
 
     useEffect( () => {
@@ -91,7 +91,7 @@ const Content = () => {
 
     return (
         <div>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }} className={classes.tabs}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }} css={style}>
                 <Tabs value={tab} onChange={handleChange} aria-label="basic tabs">
                     <Tab label="Auto Switch Layer" />
                     <Tab label="Oled Clock" />

@@ -65,12 +65,13 @@ const start = (device) => {
             })
             kbd[id].on('data', data => {
                 const str = data.toString()
+                const dId = deviceId(d)
                 if (str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
                 if(
-                    !gpkRCVersion[deviceId(d)] ||
-                    (gpkRCVersion[deviceId(d)] && gpkRCVersion[deviceId(d)] === 0)
+                    !gpkRCVersion[dId] ||
+                    (gpkRCVersion[dId] && gpkRCVersion[dId] === 0)
                 ) {
-                    gpkRCVersion[deviceId(d)] = str.match(/gpk_rc_1/) ? 1 : 0
+                    gpkRCVersion[dId] = str.match(/gpk_rc_1/) ? 1 : 0
                 }
             })
         }

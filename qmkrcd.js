@@ -27,6 +27,7 @@ const commandToBytes = exports.commandToBytes = (command) => {
 
 
 let isOledOn = false
+let gpkRCVersion = {}
 let connect = {}
 let kbd = {}
 
@@ -65,11 +66,18 @@ const start = (device) => {
             kbd[id].on('data', data => {
                 const str = data.toString()
                 if (str.match(/is_oled/)) isOledOn = /is_oled_on/.test(str)
+                if(
+                    !gpkRCVersion[deviceId(d)] ||
+                    (gpkRCVersion[deviceId(d)] && gpkRCVersion[deviceId(d)] === 0)
+                ) {
+                    gpkRCVersion[deviceId(d)] = str.match(/gpk_rc_1/) ? 1 : 0
+                }
             })
         }
         connect[id] = true
     }
 }
+
 const stop = (device) => {
     const id = deviceId(device)
     if (kbd[id]) {
@@ -89,6 +97,7 @@ const writeCommand = (device, command) => {
 }
 
 module.exports.isOledOn = () => isOledOn
+module.exports.gpkRCVersion = (kbd) => gpkRCVersion[deviceId(kbd)]
 module.exports.connect = (type) => connect[type]
 module.exports.getKBD = getKBD
 module.exports.getKBDList = getKBDList

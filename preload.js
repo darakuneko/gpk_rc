@@ -1,7 +1,7 @@
 const {contextBridge, ipcRenderer} = require("electron")
 const dayjs = require('dayjs')
 const Store = require("electron-store")
-const {start, stop, writeCommand, connect, isOledOn, getKBDList, deviceId} = require(`${__dirname}/qmkrcd`)
+const {start, stop, writeCommand, connect, isOledOn, gpkRCVersion, getKBDList, deviceId} = require(`${__dirname}/qmkrcd`)
 let store
 
 const deviceType = {
@@ -18,20 +18,34 @@ const params = {
     storePath: ""
 }
 
+const  command_id = (kbd) => gpkRCVersion(kbd) === 0 ? {
+    oledWrite: 23,
+    switchLayer:  34,
+    setOledState: 36,
+    gpkRCVersion: 117
+}  : {
+    oledWrite: 103,
+    switchLayer:  114,
+    setOledState: 116,
+    gpkRCVersion: 117
+}
+
 const osSwitchKeys = ["os:win", "os:mac", "os:linux"]
 
 const command = {
     start: (kbd) => {
         start(kbd)
+        getGPKRCVersion(kbd)
         switchOSlayer(kbd)
     },
     stop: (kbd) => stop(kbd),
-    switchLayer: (kbd, n) => writeCommand(kbd, {id: 34, data: [n]}),
+    getGPKRCVersion: (kbd) => writeCommand(kbd, {id: command_id(kbd).gpkRCVersion }),
+    switchLayer: (kbd, n) => writeCommand(kbd, {id: command_id(kbd).switchLayer, data: [n]}),
     setOledState: async (kbd) => {
-        writeCommand(kbd, {id: 36})
+        writeCommand(kbd, {id: command_id(kbd).oledWrite})
         await sleep(300)
     },
-    oledWrite: (kbd, str) => writeCommand(kbd, {id: 23, data: str}),
+    oledWrite: (kbd, str) => writeCommand(kbd, {id: command_id(kbd).oledWrite, data: str}),
     getConnectDevices: (type) => {
         const connectDevices = store.get('devices')
         if (connectDevices) {
@@ -97,6 +111,7 @@ const switchOSlayer = (device) => {
         if(isChangeOSLayer) command.switchLayer(device, l.layer)
     }
 }
+const getGPKRCVersion = (device) => command.getGPKRCVersion(device)
 
 const switchLayer = (device) => {
     const id = deviceId(device)

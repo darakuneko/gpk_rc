@@ -6,6 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import {styled} from "@mui/material/styles";
 import {ActiveWindowTitle, theme} from "../style";
+import Input from '@mui/material/Input';
 
 
 const ActiveWindowDescription = styled(ListItem)({
@@ -14,7 +15,10 @@ const ActiveWindowDescription = styled(ListItem)({
 
 const ActiveWindow = () => {
     const {state} = useStateContext()
-    const description = "Open the application used for layer switching. \n Please Copy & Paste to layer's application."
+    const description = `Access the application used to switch layers and you will see the application name.
+        Please Copy & Paste to layer's application.
+        use the keyboard shortcuts.
+        e.g. ctrl + C / command + C.`
     const brText = description.split("\n").map((line, key) => <span key={key}>{line}<br/></span>);
 
     return (
@@ -30,7 +34,7 @@ const ActiveWindow = () => {
                 </ActiveWindowDescription>
                 {state.activeWindow.map((a, i) => (
                     <ListItem key={`active-window-${i}`}>
-                        <ListItemText primary={a}/>
+                        <Input defaultValue={a}/>
                     </ListItem>
                 ))}
             </List>

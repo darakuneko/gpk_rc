@@ -40,7 +40,10 @@ const command = {
     },
     stop: (kbd) => stop(kbd),
     getGPKRCVersion: (kbd) => writeCommand(kbd, {id: command_id(kbd).gpkRCVersion }),
-    switchLayer: (kbd, n) => writeCommand(kbd, {id: command_id(kbd).switchLayer, data: [n]}),
+    switchLayer: (kbd, n) => {
+        console.log(n)
+        writeCommand(kbd, {id: command_id(kbd).switchLayer, data: [n]})
+    },
     setOledState: async (kbd) => {
         writeCommand(kbd, {id: command_id(kbd).oledWrite})
         await sleep(300)

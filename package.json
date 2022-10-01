@@ -9,7 +9,7 @@
     "dist:mac": "npm run build && npm run postinstall && electron-builder -m",
     "dist:linux": "npm run build && npm run postinstall && electron-builder -l"
   },
-  "name": "gpk_cr",
+  "name": "gpk_rc",
   "version": "1.8.2",
   "description": "GPK RC",
   "homepage": "https://github.com/darakuneko",

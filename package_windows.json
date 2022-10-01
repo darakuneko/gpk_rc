@@ -1,0 +1,85 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf ./public/build && rm -rf ./build && rm -rf ./dist && npx webpack",
+    "build:win": "del /s /q public\\build && del /s /q build && del /s /q dist && npx webpack",
+    "start": "npx webpack && npx electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "dist:win": "npm run build:win && npm run postinstall && electron-builder -w",
+    "dist:mac": "npm run build && npm run postinstall && electron-builder -m",
+    "dist:linux": "npm run build && npm run postinstall && electron-builder -l"
+  },
+  "name": "gpk_rc",
+  "version": "1.8.2",
+  "description": "GPK RC",
+  "homepage": "https://github.com/darakuneko",
+  "author": {
+    "name": "darakuneko",
+    "email": "tvkids@gmail.com"
+  },
+  "resolutions": {
+    "iconv": "3.0.1",
+    "nan": "github:tec27/nan#remove_accessor_signature"
+  },
+  "devDependencies": {
+    "electron": "20.3.0",
+    "electron-builder": "23.3.3",
+    "electron-rebuild": "3.2.9",
+    "webpack-cli": "4.10.0"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "@babel/core": "7.19.3",
+    "@babel/preset-env": "7.19.3",
+    "@babel/preset-react": "7.18.6",
+    "@emotion/babel-preset-css-prop": "11.10.0",
+    "@emotion/react": "11.10.4",
+    "@emotion/styled": "11.10.4",
+    "@mui/icons-material": "5.10.6",
+    "@mui/material": "5.10.7",
+    "active-win": "7.7.2",
+    "babel-loader": "8.2.5",
+    "dayjs": "1.11.5",
+    "electron-store": "8.1.0",
+    "ffi-napi": "4.0.3",
+    "find-process": "^1.4.7",
+    "fs": "0.0.1-security",
+    "node-gyp": "^9.1.0",
+    "node-hid": "2.1.2",
+    "node-loader": "2.0.0",
+    "node-window-manager": "2.2.4",
+    "path": "0.12.7",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "uuid": "9.0.0",
+    "webpack": "5.74.0"
+  },
+  "build": {
+    "productName": "GPK RC",
+    "appId": "app.darakuneko",
+    "npmRebuild": false,
+    "files": [
+      "public/**/*",
+      "icons/*",
+      "index.js",
+      "preload.js",
+      "qmkrcd.js",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icons/icon-256x256.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icons/icon-512x512.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "icons"
+    }
+  }
+}

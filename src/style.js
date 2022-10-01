@@ -49,7 +49,11 @@ export const SettingDelete = styled(IconButton)({
 })
 
 export const WrapSettingLayer = styled("div")({
-    paddingRight: "70px"
+    borderBottom: "1px dotted",
+    marginLeft: "50px",
+    marginRight: "64px",
+    paddingBottom: "10px"
+
 })
 
 export const SettingLayer = styled("div")({
@@ -63,4 +67,8 @@ export const SettingLayerInput = styled(Box)({
 
 export const SettingLayerAdd = styled(TextField)({
     paddingRight: "40px"
+})
+
+export const WrapSettingLayerList = styled("div")({
+    paddingLeft: "70px"
 })

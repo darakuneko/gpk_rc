@@ -83,10 +83,22 @@ const stop = (device) => {
     const id = deviceId(device)
     if (kbd[id]) {
         kbd[id].removeAllListeners("data")
-        if(process.platform === "darwin") kbd[id].close()
+        _close(id)
         kbd[id] = undefined
         connect[id] = false
     }
+}
+
+const _close = (id) => {
+    try{
+        kbd[id].close()
+    } catch (e) {
+        console.log(`close ${id}`)
+    }
+}
+
+const close = () => {
+    if(kbd) Object.keys(kbd).map(id => _close(id))
 }
 
 const writeCommand = (device, command) => {
@@ -104,5 +116,6 @@ module.exports.getKBD = getKBD
 module.exports.getKBDList = getKBDList
 module.exports.start = start
 module.exports.stop = stop
+module.exports.close = close
 module.exports.writeCommand = writeCommand
 module.exports.deviceId = deviceId

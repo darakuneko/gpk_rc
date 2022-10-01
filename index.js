@@ -1,18 +1,23 @@
 const {app, BrowserWindow, ipcMain, Tray, Menu} = require("electron")
 const activeWindows = require('active-win')
 const { windowManager } = require("node-window-manager");
+
+const {start, stop, close, writeCommand, connect, isOledOn, gpkRCVersion, getKBDList, deviceId} = require(`${__dirname}/qmkrcd`)
+const dayjs = require('dayjs')
+const Store = require("electron-store")
+
 windowManager.requestAccessibility()
+
+let store
 
 let mainWindow
 let tray = null
 const createWindow = () => {
     mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 800,
+        width: 1280,
+        height: 1000,
         icon: `${__dirname}/icons/icon-256x256.png`,
         webPreferences: {
-            nodeIntegration: false,
-            contextIsolation: true,
             preload: __dirname + '/preload.js',
             backgroundThrottling: false,
         },
@@ -44,7 +49,7 @@ app.on('ready', () => {
         if(process.platform==='darwin') return "tray.png"
         return "icon-72x72.png"
     }
-
+    store = new Store()
     tray = new Tray(`${__dirname}/icons/${icon()}`)
     tray.setContextMenu(Menu.buildFromTemplate([
         {
@@ -58,6 +63,7 @@ app.on('ready', () => {
             label: 'Exit',
             click: () => {
                 app.isQuiting = true
+                close()
                 app.quit()
             }
         }
@@ -66,7 +72,7 @@ app.on('ready', () => {
         mainWindowShow(mainWindow)
     })
     createWindow()
-    mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 })
 
 const mainWindowShow = (mainWindow) => {
@@ -85,12 +91,9 @@ app.on('activate', () => {
     if (mainWindow === null) createWindow()
 })
 
-ipcMain.on("connectSwitchLayer", (e, data) => {
-    mainWindow.webContents.send("isConnectSwitchLayer", data)
-})
 
-ipcMain.on("connectOledClock", (e, data) => {
-    mainWindow.webContents.send("isConnectOledClock", data)
+ipcMain.on("connectDevice", (e, data) => {
+    mainWindow.webContents.send("isConnectDevice", data)
 })
 
 ipcMain.on("changeActiveWindow", (e, data) => {
@@ -115,6 +118,56 @@ ipcMain.on("onWindowShow", async () => {
     mainWindow.webContents.send("windowShow", true)
 })
 
-ipcMain.on("setAppVersion", async () => {
-    mainWindow.webContents.send("getAppVersion", app.getVersion())
+const sleep = async (msec) => new Promise(resolve => setTimeout(resolve, msec))
+
+const  commandId = (device) => gpkRCVersion(device) === 0 ? {
+    oledWrite: 23,
+    switchLayer:  34,
+    setOledState: 36,
+    gpkRCVersion: 117
+}  : {
+    oledWrite: 103,
+    switchLayer:  114,
+    setOledState: 116,
+    gpkRCVersion: 117
+}
+
+ipcMain.handle('deviceId', async (event, device) => await deviceId(device))
+
+ipcMain.handle('start', async (event,device) => {
+    await start(device)
+    await writeCommand(device, {id: commandId(device).gpkRCVersion })
 })
+ipcMain.handle('stop', async (event, device) => {
+    await stop(device)
+})
+ipcMain.handle('getKBDList', async (event) => await getKBDList())
+ipcMain.handle('connect', async (event, id) => await connect(id))
+ipcMain.handle('switchLayer', async (event, obj) => {
+    await writeCommand(obj.device, {id: commandId(obj.device).switchLayer, data: [obj.n]})
+})
+ipcMain.handle('isOledOn', async (event) => await isOledOn())
+ipcMain.handle('setOledState', async (device) => {
+    await writeCommand(device, {id: commandId(device).oledWrite})
+    await sleep(300)
+})
+ipcMain.handle('oledWrite', async (event, obj) => {
+    await writeCommand(obj.device, {id: commandId(obj.device).oledWrite, data: obj.now})
+})
+ipcMain.handle('sleep', async (event, msec) => {
+    await sleep(msec)
+})
+ipcMain.handle('now', async (event) => await dayjs().format('YYYY/MM/DD ddd HH:mm '))
+ipcMain.handle('exitsStore',  async (event) => !!store)
+ipcMain.handle('setStoreDevice',  async (event, device) => {
+    if(store && device) {
+        await store.set('devices', device)
+    }
+})
+ipcMain.handle('getStoreAllDevices',  async (event) => {
+    if(store) return await store.get('devices')
+})
+
+ipcMain.handle('getStorePath',  async (event) => store.path)
+
+ipcMain.handle("getAppVersion", async () => app.getVersion())

@@ -6,14 +6,15 @@ import Delete from '@mui/icons-material/Delete';
 import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
 import {useStateContext} from "../context";
 import {SettingDelete, SettingInputs, SettingSwitch} from "../style";
+const {api} = window
 
 const OledClockEdit = ((props) => {
     const {state, setState} = useStateContext();
     const device = props.device
 
-    const _handleSwitchChange = (device) => (e) => {
+    const _handleSwitchChange = (device) => async (e) => {
         const isChecked = e.currentTarget.checked
-        handleSwitchChange(state, setState, device, isChecked, api.deviceType.oledClock)
+        await handleSwitchChange(state, setState, device, isChecked, api.deviceType.oledClock)
     }
 
     return (<div key={`${device.id}`}>

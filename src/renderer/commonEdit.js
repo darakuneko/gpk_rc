@@ -1,6 +1,6 @@
 const {api} = window
 
-export const handleTextChange = (state, setState, id, propName, layer, layerIndex) => (e) => {
+export const handleTextChange = (state, setState, id, propName, layer, layerIndex) => async (e) => {
     const value = propName === "layer" ? parseInt(e.target.value) : e.target.value.trim()
 
     state.devices = state.devices.map(d => {
@@ -17,32 +17,31 @@ export const handleTextChange = (state, setState, id, propName, layer, layerInde
         }
         return d
     })
-    setState(state, true)
+    await setState(state, true)
 }
 
-export const handleSwitchChange = (state, setState, device, isChecked, type) => {
-    const deviceId = api.deviceId(device)
-
-    state.devices = state.devices.map(d => {
-        if (api.deviceId(d) === deviceId && type === d.type) isChecked ? d.onSwitchButton = 1 : d.onSwitchButton = 0
+export const handleSwitchChange = async (state, setState, device, isChecked, type) => {
+    const deviceId = device.id
+    state.devices = await Promise.all(state.devices.map(async d => {
+        if (deviceId === d.id && type === d.type) isChecked ? d.onSwitchButton = 1 : d.onSwitchButton = 0
         return d
-    })
+    }))
 
     const devices = state.devices.filter(d => d.onSwitchButton === 1 && d.id === device.id)
     if(devices.length > 0){
         state.connectDevice[deviceId] = device
-        api.start(device)
+        await api.start(device)
     } else {
         delete state.connectDevice[deviceId]
         delete state.connect[deviceId]
-        api.stop(device)
+        await api.stop(device)
     }
-    setState(state, true)
+    await setState(state, true)
 }
 
-export const handleDelete = (state, setState, id) => () => {
+export const handleDelete = (state, setState, id) => async () => {
     state.devices = state.devices.filter(d => d.id !== id)
-    setState(state, true)
+    await setState(state, true)
 }
 
 export const toHex = (number) => {

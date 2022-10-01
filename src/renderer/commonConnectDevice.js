@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import {styled} from "@mui/material/styles";
 import {useStateContext} from "../context";
+const {api} = window
 
 const DeviceStatus = styled("div")({
     paddingLeft: "10px",
@@ -13,14 +14,16 @@ const Device = styled("div")({
 
 const CommonConnectDevice = ((props) => {
     const {state} = useStateContext();
+
     const deviceType = props.deviceType
 
     const devices = () => {
         if(!state.connectDevice) return undefined
         const devices  = state.devices.filter(d => d.type === deviceType)
         const keys = Object.keys(state.connectDevice)
-        return devices.filter(d => keys.includes(api.deviceId(d)))
+        return devices.filter(d => keys.includes(d.id))
     }
+
     return (<span>
             {state.init ? (
                 <DeviceStatus>
@@ -34,7 +37,7 @@ const CommonConnectDevice = ((props) => {
                                 {d.manufacturer} {d.product}
                             </Device>
                             <div>
-                                {state.connect[api.deviceId(d)] ? "connect" : "disconnect"}
+                                {state.connect[d.id] ? "connect" : "disconnect"}
                             </div>
                         </DeviceStatus>
                     )) : (

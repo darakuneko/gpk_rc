@@ -24,8 +24,8 @@ export function StateProvider({children}) {
 
     const [kbdListState, setKbdList] = useState([])
 
-    const setState = (obj, isSetDevice) => {
-        if(isSetDevice) api.setDevices(obj.devices)
+    const setState = async (obj, isSetDevice) => {
+        if(isSetDevice) await api.setDevices(obj.devices)
         _setState({
             init: obj.init,
             devices: obj.devices,

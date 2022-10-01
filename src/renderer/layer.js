@@ -22,7 +22,7 @@ const Layer = (() => {
             <SettingsPrecautionary>Do not connect while using remap</SettingsPrecautionary>
             <div>
                 {state.devices && state.devices.filter(d => d.type === api.deviceType.switchLayer).map(d => (
-                    <div key={`${d.id}`}><LayerEdit device={d}/></div>))}
+                    <div key={`${d.id}`}><LayerEdit device={d} /></div>))}
             </div>
         </Paper>)
 })

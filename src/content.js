@@ -16,73 +16,75 @@ import {useStateContext} from "./context"
 const style = css`paddingTop: "40px"`;
 
 const Content = () => {
-    const { state, setState, setKbdList} = useStateContext()
-    const [ tab, setTab] = useState(0)
+    const {state, setState, setKbdList} = useStateContext()
+    const [tab, setTab] = useState(0)
+
     const loadingRef = useRef()
 
-    useEffect( () => {
-        api.send("setAppVersion")
-        const fn = () => {
-            if(state.mainWindowShow) setKbdList(api.getKBDList())
-            api.keyboardSendLoop()
+    useEffect(  () => {
+        const fn = async () => {
+            const checkFn = async () => {
+                if(state.mainWindowShow) setKbdList(await api.getKBDList())
+                await api.keyboardSendLoop()
+            }
+            try{
+                setInterval(await checkFn, 500)
+            } catch (e) {
+                console.log("error timer")
+            }
         }
-        try{
-            setInterval(fn, 300)
-        } catch (e) {
-            console.log("error timer")
-        }
-        api.initStore()
+        fn()
+        return () => {}
     }, [loadingRef])
 
     useEffect( () => {
-        const connectDevices = Object.values(api.deviceType).map(type => api.getConnectDevices(type)).flat()
-        connectDevices.forEach(d => {
-            if(d) state.connectDevice[api.deviceId(d)] = d
-        })
-        const devices = api.getDevices()
-        if(devices) state.devices = devices
-        state.init = false
-        setState(state, true)
-    }, [])
-
-    useEffect(() => {
-        const set = (type, obj) => {
-            const kbd = obj.kbd
-            const id = api.deviceId(kbd)
-            state.connect[id] = obj.isConnected
-            api.getConnectDevices(type).map(d => state.connectDevice[api.deviceId(d)] = d)
-            state.devices = api.getDevices()
-            setState(state, true)
+        const fn = async () => {
+            const connectDevices = Object.values(api.deviceType).map(async type => await api.getConnectDevices(type)).flat()
+            await Promise.all(connectDevices.map( async device => {
+                const d = await device
+                if(d) state.connectDevice[d.id] = d
+            }))
+            const devices = await api.getDevices()
+            if(devices) state.devices = devices
+            state.init = false
+            await setState(state, true)
         }
-        api.on("isConnectSwitchLayer", (dat) => set(api.deviceType.switchLayer, dat))
-        api.on("isConnectOledClock", (dat) =>  set(api.deviceType.oledClock, dat))
+        fn()
         return () => {}
     }, [])
 
     useEffect(() => {
-        api.on("activeWindow", (dat) => {
+        const set = async (obj) => {
+            const kbd = obj.kbd
+            const id = kbd.id
+            state.connect[id] = obj.isConnected
+            const devices = await api.getStoreAllDevices()
+            await Promise.all(devices.map(async d => state.connectDevice[id] = d))
+            state.devices = await api.getDevices()
+            await setState(state, true)
+        }
+        api.on("isConnectDevice", (dat) => set(dat))
+        return () => {}
+    }, [])
+
+    useEffect(() => {
+        api.on("activeWindow", async (dat) => {
             if(!state.activeWindow.includes(dat)) {
                 const activeWindows = state.activeWindow.concat(dat)
                 if(activeWindows.length > 10) activeWindows.shift()
                 state.activeWindow = activeWindows
-                setState(state)
+                await setState(state)
             }
         })
         return () => {}
     }, [])
 
     useEffect(() => {
-        api.on("mainWindowShow", (bool) => {
+        api.on("mainWindowShow", async(bool) => {
             state.mainWindowShow = bool
-            setState(state)
+            await setState(state)
         })
         return () => {}
-    }, [])
-
-    useEffect( () => {
-        api.on("getAppVersion", (v) => {
-            state.appVersion = v
-            setState(state)})
     }, [])
 
     const handleChange = (event, newValue) => {
@@ -99,7 +101,7 @@ const Content = () => {
                     <Tab label="Registerable Keyboard List" />
                 </Tabs>
             </Box>
-            {tab === 0 && <Layer />}
+            {tab === 0 && <Layer/>}
             {tab === 1 && <OledClock />}
             {tab === 2 && <ActiveWindow />}
             {tab === 3 && <KeyboardList />}

@@ -15,6 +15,9 @@ const {api} = window
 
 const KeyboardList = () => {
     const {state, setState, kbdListState} = useStateContext();
+    const storePath = () => api.storePath()
+    const appVersion = () => api.appVersion()
+
     const registered = (type, kbd) => {
         const d = state.devices.filter(d => d.type === type).find(d =>
             d.manufacturer === kbd.manufacturer &&
@@ -25,14 +28,14 @@ const KeyboardList = () => {
         return !!d
     }
 
-    const handleAdd = (type, kbd) => () => {
+    const handleAdd = (type, kbd) => async () => {
         const obj = type === api.deviceType.switchLayer ? createLayerObj() : createOledClockObj()
         obj.manufacturer = kbd.manufacturer
         obj.product = kbd.product
         obj.vendorId = kbd.vendorId
         obj.productId = kbd.productId
         state.devices.push(obj)
-        setState(state, true)
+        await setState(state, true)
     }
 
     return (
@@ -70,10 +73,10 @@ const KeyboardList = () => {
                 ))}
             </List>
             <List>
-                <ListItem>file: {api.storePath()}</ListItem>
+                <ListItem>file: {storePath()}</ListItem>
             </List>
             <List>
-                <ListItem>version: {state.appVersion}</ListItem>
+                <ListItem>version: {appVersion()}</ListItem>
             </List>
         </Paper>
     )

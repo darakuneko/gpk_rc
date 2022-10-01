@@ -16,6 +16,8 @@ import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
 import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
 
+const {api} = window
+
 import {useStateContext} from "../context";
 import {
     SettingInputs,
@@ -24,7 +26,7 @@ import {
     WrapSettingLayer,
     SettingLayer,
     SettingLayerAdd,
-    SettingLayerInput
+    SettingLayerInput, WrapSettingLayerList
 } from "../style";
 
 const LayerEdit = ((props) => {
@@ -32,25 +34,25 @@ const LayerEdit = ((props) => {
     const device = props.device
     const selectArr = [...Array(20).keys()]
 
-    const handleLayerAdd = (id) => () => {
+    const handleLayerAdd = (id) => async () => {
         state.devices = state.devices.map(d => {
             if (d.id === id) d.layers.push({name: "", layer: 0})
             return d
         })
-        setState(state, true)
+        await setState(state, true)
     }
 
-    const handleLayerDelete = (id, layerIndex) => () => {
+    const handleLayerDelete = (id, layerIndex) => async () => {
         state.devices = state.devices.map(d => {
             if (d.id === id) d.layers = d.layers.filter((_, i) => i !== layerIndex)
             return d
         })
-        setState(state, true)
+        await setState(state, true)
     }
 
-    const _handleSwitchChange = (device) => (e) => {
+    const _handleSwitchChange = (device) => async (e) => {
         const isChecked = e.currentTarget.checked
-        handleSwitchChange(state, setState, device, isChecked, api.deviceType.switchLayer)
+        await handleSwitchChange(state, setState, device, isChecked, api.deviceType.switchLayer)
     }
 
     return (<div key={`${device.id}`}>
@@ -143,6 +145,7 @@ const LayerEdit = ((props) => {
                         )
                     )
                 ) : (
+                    <WrapSettingLayerList>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -164,6 +167,7 @@ const LayerEdit = ((props) => {
                             ))}
                         </TableBody>
                     </Table>
+                    </WrapSettingLayerList>
                 )}
             </WrapSettingLayer>
         </div>

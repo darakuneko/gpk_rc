@@ -10,7 +10,7 @@
     "dist:linux": "npm run build && npm run postinstall && electron-builder -l"
   },
   "name": "gpk_rc",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "GPK RC",
   "homepage": "https://github.com/darakuneko",
   "author": {
@@ -55,7 +55,7 @@
   },
   "build": {
     "productName": "GPK RC",
-    "appId": "app.darakuneko",
+    "appId": "app.darakuneko.gpk_rc",
     "npmRebuild": false,
     "files": [
       "public/**/*",

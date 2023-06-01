@@ -4,27 +4,21 @@
     "build": "rm -rf ./public/build && rm -rf ./build && rm -rf ./dist && npx webpack",
     "build:win": "del /s /q public\\build && del /s /q build && del /s /q dist && npx webpack",
     "start": "npx webpack && npx electron .",
-    "postinstall": "electron-rebuild -f -w node-gyp",
-    "dist:win": "npm run build:win && npm run postinstall && electron-builder -w",
-    "dist:mac": "npm run build && npm run postinstall && electron-builder -m",
-    "dist:linux": "npm run build && npm run postinstall && electron-builder -l"
+    "dist:win": "npm run build && electron-builder -w",
+    "dist:mac": "npm run build  && electron-builder -m",
+    "dist:linux": "npm run build && electron-builder -l"
   },
   "name": "gpk_rc",
-  "version": "1.8.4",
+  "version": "1.9.0",
   "description": "GPK RC",
   "homepage": "https://github.com/darakuneko",
   "author": {
     "name": "darakuneko",
     "email": "tvkids@gmail.com"
   },
-  "resolutions": {
-    "nan": "github:tec27/nan#remove_accessor_signature",
-    "@inigolabs/ref-napi": "4.0.4"
-  },
   "devDependencies": {
     "electron": "23.2.0",
     "electron-builder": "23.6.0",
-    "@electron/rebuild": "3.2.10",
     "webpack-cli": "5.0.1"
   },
   "main": "./index.js",
@@ -39,17 +33,15 @@
     "@inigolabs/ref-napi": "4.0.6",
     "@mui/icons-material": "5.11.11",
     "@mui/material": "5.11.14",
-    "active-win": "8.1.0",
+    "@paymoapp/active-window": "^1.2.3",
     "babel-loader": "9.1.2",
     "dayjs": "1.11.7",
     "electron-store": "8.1.0",
     "find-process": "^1.4.7",
     "fs": "0.0.1-security",
     "iconv": "3.0.1",
-    "nan": "github:tec27/nan#remove_accessor_signature",
     "node-hid": "2.1.2",
     "node-loader": "2.0.0",
-    "node-window-manager": "2.2.4",
     "path": "0.12.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",

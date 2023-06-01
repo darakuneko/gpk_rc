@@ -1,12 +1,11 @@
 const {app, BrowserWindow, ipcMain, Tray, Menu} = require("electron")
-const activeWindows = require('active-win')
-const { windowManager } = require("node-window-manager");
+const ActiveWindow = require('@paymoapp/active-window')
 
 const {start, stop, close, writeCommand, connect, isOledOn, gpkRCVersion, getKBDList, deviceId} = require(`${__dirname}/qmkrcd`)
 const dayjs = require('dayjs')
 const Store = require("electron-store")
 
-windowManager.requestAccessibility()
+ActiveWindow.default.initialize()
 
 let store
 
@@ -102,14 +101,11 @@ ipcMain.on("changeActiveWindow", (e, data) => {
 
 ipcMain.on("setActiveWindow", async () => {
     const getWindowName = async () => {
-        if (process.platform === 'darwin') {
-            const window = windowManager.getActiveWindow();
-            return window.path.replaceAll(/.*\/|.app$/g,"")
-        } else {
-            const result = await activeWindows()
-            if(result) return result.owner.name
-        }
-        return ""
+        let activeWin
+        try {
+           activeWin = ActiveWindow.default.getActiveWindow();
+        } catch (e) {}
+        return Promise.resolve(activeWin ? activeWin.application : "") 
     }
     mainWindow.webContents.send("getActiveWindow", await getWindowName())
 })

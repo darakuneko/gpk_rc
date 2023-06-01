@@ -29,8 +29,6 @@
     "@emotion/babel-preset-css-prop": "11.10.0",
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
-    "@inigolabs/ffi-napi": "4.0.10",
-    "@inigolabs/ref-napi": "4.0.6",
     "@mui/icons-material": "5.11.11",
     "@mui/material": "5.11.14",
     "@paymoapp/active-window": "^1.2.3",

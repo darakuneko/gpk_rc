@@ -4,12 +4,12 @@
     "build": "rm -rf ./public/build && rm -rf ./build && rm -rf ./dist && npx webpack",
     "build:win": "del /s /q public\\build && del /s /q build && del /s /q dist && npx webpack",
     "start": "npx webpack && npx electron .",
-    "dist:win": "npm run build && electron-builder -w",
+    "dist:win": "npm run build:win && electron-builder -w",
     "dist:mac": "npm run build  && electron-builder -m",
     "dist:linux": "npm run build && electron-builder -l"
   },
   "name": "gpk_rc",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "GPK RC",
   "homepage": "https://github.com/darakuneko",
   "author": {
@@ -17,34 +17,31 @@
     "email": "tvkids@gmail.com"
   },
   "devDependencies": {
-    "electron": "23.2.0",
+    "electron": "25.0.1",
     "electron-builder": "23.6.0",
-    "webpack-cli": "5.0.1"
+    "webpack-cli": "5.1.1"
   },
   "main": "./index.js",
   "dependencies": {
-    "@babel/core": "7.21.3",
-    "@babel/preset-env": "7.20.2",
-    "@babel/preset-react": "7.18.6",
-    "@emotion/babel-preset-css-prop": "11.10.0",
-    "@emotion/react": "11.10.6",
-    "@emotion/styled": "11.10.6",
-    "@mui/icons-material": "5.11.11",
-    "@mui/material": "5.11.14",
-    "@paymoapp/active-window": "^1.2.3",
+    "@babel/core": "7.22.1",
+    "@babel/preset-env": "7.22.4",
+    "@babel/preset-react": "7.22.3",
+    "@emotion/babel-preset-css-prop": "11.11.0",
+    "@emotion/react": "11.11.0",
+    "@emotion/styled": "11.11.0",
+    "@mui/icons-material": "5.11.16",
+    "@mui/material": "5.13.3",
+    "@paymoapp/active-window": "1.2.3",
     "babel-loader": "9.1.2",
     "dayjs": "1.11.7",
     "electron-store": "8.1.0",
-    "find-process": "^1.4.7",
-    "fs": "0.0.1-security",
-    "iconv": "3.0.1",
     "node-hid": "2.1.2",
     "node-loader": "2.0.0",
     "path": "0.12.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "uuid": "9.0.0",
-    "webpack": "5.76.3"
+    "webpack": "5.85.0"
   },
   "build": {
     "productName": "GPK RC",

@@ -4,7 +4,7 @@
 
 ## QMK Remote Controller Application
 
-- Automatic layer switching
+- Automatic layer switching based on application
 - Change layers per OS
 - Change layers per Applcation
 - Write time to OLED (write to the last line)

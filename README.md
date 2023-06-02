@@ -4,9 +4,7 @@
 
 ## QMK Remote Controller Application
 
-- Automatic layer switching
-- Change layers per OS
-- Change layers per Applcation
+- Automatic layer switching based on application or OS
 - Write time to OLED (write to the last line)
 - This Applcation use custom [qmk_rc](https://github.com/mmalecki/qmk_rc)
 - [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc) QMK compatible

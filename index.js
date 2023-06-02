@@ -143,8 +143,8 @@ ipcMain.handle('switchLayer', async (event, obj) => {
     await writeCommand(obj.device, {id: commandId(obj.device).switchLayer, data: [obj.n]})
 })
 ipcMain.handle('isOledOn', async (event) => await isOledOn())
-ipcMain.handle('setOledState', async (device) => {
-    await writeCommand(device, {id: commandId(device).oledWrite})
+ipcMain.handle('setOledState', async (event, device) => {
+    await writeCommand(device, {id: commandId(device).setOledState})
     await sleep(300)
 })
 ipcMain.handle('oledWrite', async (event, obj) => {

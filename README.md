@@ -8,9 +8,9 @@
 - Write time to OLED (write to the last line)
 - This Applcation use custom [qmk_rc](https://github.com/mmalecki/qmk_rc)
 - [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc) QMK compatible
-  version is 0.14.32, 0.16.9, 0.18.6
+  version is 0.16.9, 0.18.6
 - It might work, but I won't guarantee it in other versions.
-- Support VIA/Remap
+- Support Vial, VIA
 
 ## Build
 
@@ -35,21 +35,19 @@ linux
 ## Keybaord Side
 
 ### Compatible models
-- GPK60 Series
-- Yamada Series
 - Num-Num Strawberry!!
+- Num-Num Bento
 
-### Apply to my keyboard
+### Use Vial
+https://github.com/darakuneko/vial-qmk/tree/gpk_rc    
+use gpk_rc branch   
+
+rules.mk  
+```GPKRC_ENABLE = yes```
+
+### Apply Manually
 
 files: [custom qmk_rc&via](https://github.com/darakuneko/keyboard/tree/main/qmk/custom_qmkrc)
-
-#### If QMK clone
-
-```
-git clone https://github.com/qmk/qmk_firmware.git -b 0.14.32
-cd qmk_firmware
-make git-submodule
-```
 
 #### qmk_firmware/quantum/
 
@@ -65,7 +63,6 @@ copy qmk_rc.c
 
 ```VIA_ENABLE = yes```
 
-  
 ## License
 
 MIT

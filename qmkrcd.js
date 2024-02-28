@@ -53,12 +53,12 @@ const getKBDList = () => HID.devices().filter(d =>
     d.usagePage === DEFAULT_USAGE.usagePage
 ).sort((a, b) => `${a.manufacturer}${a.product}` > `${b.manufacturer}${b.product}` ? 1 : -1)
 
-const start = async (device) => {
+const start = async (device, os) => {
     const d = getKBD(device)
     if (d && d.path) {
         const id = deviceId(device)
         if(!kbd[id]){
-            kbd[id] = await HID.HIDAsync.open(d.path);
+            kbd[id] = os === 'linux' ?  await HID.HIDAsync.open(d.path) : new HID.HID(d.path)
             kbd[id].on('error', (err) => {
                 console.log(err)
                 stop(device)

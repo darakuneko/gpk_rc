@@ -131,7 +131,7 @@ const  commandId = (device) => gpkRCVersion(device) === 0 ? {
 ipcMain.handle('deviceId', async (event, device) => await deviceId(device))
 
 ipcMain.handle('start', async (event,device) => {
-    await start(device)
+    await start(device, process.platform)
     await writeCommand(device, {id: commandId(device).gpkRCVersion })
 })
 ipcMain.handle('stop', async (event, device) => {

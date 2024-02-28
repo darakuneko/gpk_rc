@@ -9,7 +9,7 @@
     "dist:linux": "npm run build && electron-builder -l"
   },
   "name": "gpk_rc",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "description": "GPK RC",
   "homepage": "https://github.com/darakuneko",
   "author": {
@@ -17,7 +17,7 @@
     "email": "tvkids@gmail.com"
   },
   "devDependencies": {
-    "electron": "29.0.0",
+    "electron": "29.0.1",
     "electron-builder": "24.12.0",
     "webpack-cli": "5.1.4"
   },

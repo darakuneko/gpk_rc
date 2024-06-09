@@ -1,11 +1,11 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
 import {ThemeProvider} from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import Content from "./content";
-import {StateProvider} from "./context";
-import {responsiveFontSizes} from "@mui/material/styles";
-import {theme} from "./style";
+import {CssBaseline} from "@mui/material";
+import Content from "./content.js";
+import {StateProvider} from "./context.js";
+import {responsiveFontSizes} from "@mui/material";
+import {theme} from "./style.js";
 
 const App = () => {
     return (

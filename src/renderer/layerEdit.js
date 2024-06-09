@@ -1,33 +1,33 @@
 import React from "react";
 
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-
-import {IconButton} from "@mui/material";
-import Add from '@mui/icons-material/Add';
-import Delete from '@mui/icons-material/Delete';
-import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
-
-const {api} = window
-
-import {useStateContext} from "../context";
 import {
-    SettingInputs,
-    SettingSwitch,
+    Box,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    TextField
+} from "@mui/material";
+import {Add, Delete} from '@mui/icons-material';
+import {handleDelete, handleSwitchChange, handleTextChange, toHex} from "./commonEdit.js";
+import {useStateContext} from "../context.js";
+import {
     SettingDelete,
-    WrapSettingLayer,
+    SettingInputs,
     SettingLayer,
     SettingLayerAdd,
-    SettingLayerInput, WrapSettingLayerList
-} from "../style";
+    SettingLayerInput,
+    SettingSwitch,
+    WrapSettingLayer,
+    WrapSettingLayerList
+} from "../style.js";
+
+const {api} = window
 
 const LayerEdit = ((props) => {
     const {state, setState} = useStateContext();
@@ -97,7 +97,7 @@ const LayerEdit = ((props) => {
                 <Box m={2}>
                     {device.onSwitchButton === 0 ? (
                         <SettingDelete aria-label="delete" fontSize="large"
-                                    onClick={handleDelete(state, setState, device.id)}>
+                                       onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>
                         </SettingDelete>
                     ) : (<div/>)
@@ -123,7 +123,7 @@ const LayerEdit = ((props) => {
                                     >
                                         {selectArr.map(i => (
                                             <MenuItem key={`layer-select-${l.layer}-${i}`} value={i}
-                                                      >{i}</MenuItem>
+                                            >{i}</MenuItem>
                                         ))}
                                     </Select>
                                 </SettingLayerInput>
@@ -133,11 +133,11 @@ const LayerEdit = ((props) => {
                                         variant="filled"
                                         onChange={handleTextChange(state, setState, device.id, "layer_name", l.layer, i)}
                                         value={l.name}
-                                        />
+                                    />
                                 </Box>
                                 <Box m={2}>
                                     <SettingDelete aria-label="delete" fontSize="large"
-                                                onClick={handleLayerDelete(device.id, i)}>
+                                                   onClick={handleLayerDelete(device.id, i)}>
                                         <Delete fontSize="inherit"/>
                                     </SettingDelete>
                                 </Box>
@@ -146,27 +146,27 @@ const LayerEdit = ((props) => {
                     )
                 ) : (
                     <WrapSettingLayerList>
-                    <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Layer</TableCell>
-                                <TableCell>Application/OS</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {device.layers && device.layers.map((l, i) => (
-                                <TableRow
-                                    key={`read-${device.id}-${l.layer}-${i}`}
-                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {l.layer}
-                                    </TableCell>
-                                    <TableCell>{l.name}</TableCell>
+                        <Table aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Layer</TableCell>
+                                    <TableCell>Application/OS</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHead>
+                            <TableBody>
+                                {device.layers && device.layers.map((l, i) => (
+                                    <TableRow
+                                        key={`read-${device.id}-${l.layer}-${i}`}
+                                        sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {l.layer}
+                                        </TableCell>
+                                        <TableCell>{l.name}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                     </WrapSettingLayerList>
                 )}
             </WrapSettingLayer>

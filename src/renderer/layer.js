@@ -1,11 +1,11 @@
 import React from "react";
 
-import {SettingsPrecautionary, SettingsTitle} from "../style";
-import Paper from "@mui/material/Paper";
-import LayerEdit from "./layerEdit";
+import {SettingsPrecautionary, SettingsTitle} from "../style.js";
+import {Paper} from "@mui/material";
+import LayerEdit from "./layerEdit.js";
 
-import {useStateContext} from "../context";
-import CommonConnectDevice from "./commonConnectDevice";
+import {useStateContext} from "../context.js";
+import CommonConnectDevice from "./commonConnectDevice.js";
 
 const {api} = window
 

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {styled} from "@mui/material/styles";
-import {useStateContext} from "../context";
+import { styled } from '@mui/system';
+import {useStateContext} from "../context.js";
 const {api} = window
 
 const DeviceStatus = styled("div")({

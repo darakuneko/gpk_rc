@@ -1,16 +1,11 @@
 import React from 'react'
-import {createLayerObj, createOledClockObj, useStateContext} from "../context"
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import {createLayerObj, createOledClockObj, useStateContext} from "../context.js"
+import {IconButton, List, ListItem, ListItemText, Paper} from "@mui/material";
 
-import {ActiveWindowTitle} from "../style";
-import {IconButton} from "@mui/material";
-import Add from "@mui/icons-material/Add";
-import Done from "@mui/icons-material/Done";
-import {toHex} from "./commonEdit";
+import {ActiveWindowTitle} from "../style.js";
+import {Add, Done} from "@mui/icons-material";
+import {toHex} from "./commonEdit.js";
+
 const {api} = window
 
 const KeyboardList = () => {

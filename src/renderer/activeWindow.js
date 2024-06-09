@@ -1,12 +1,8 @@
 import React from 'react'
-import {useStateContext} from "../context"
-import Paper from "@mui/material/Paper";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import {styled} from "@mui/material/styles";
-import {ActiveWindowTitle, theme} from "../style";
-import Input from '@mui/material/Input';
+import {useStateContext} from "../context.js"
+import {Input, List, ListItem, ListItemText, Paper} from "@mui/material";
+import { styled } from '@mui/system';
+import {ActiveWindowTitle, theme} from "../style.js";
 
 
 const ActiveWindowDescription = styled(ListItem)({

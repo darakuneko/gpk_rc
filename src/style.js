@@ -1,5 +1,5 @@
-import {createTheme} from "@mui/material/styles";
-import {styled} from "@mui/material/styles";
+import {createTheme} from "@mui/material";
+import { styled } from '@mui/system';
 import {Box, Typography, Switch, IconButton, TextField, TableCell} from "@mui/material";
 
 export const theme = createTheme({

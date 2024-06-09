@@ -1,11 +1,11 @@
 import React from "react";
 
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Delete from '@mui/icons-material/Delete';
-import {handleTextChange, handleSwitchChange, handleDelete, toHex} from "./commonEdit";
-import {useStateContext} from "../context";
-import {SettingDelete, SettingInputs, SettingSwitch} from "../style";
+import {Box, TextField} from "@mui/material";
+import {Delete} from '@mui/icons-material';
+import {handleDelete, handleSwitchChange, handleTextChange, toHex} from "./commonEdit.js";
+import {useStateContext} from "../context.js";
+import {SettingDelete, SettingInputs, SettingSwitch} from "../style.js";
+
 const {api} = window
 
 const OledClockEdit = ((props) => {
@@ -59,7 +59,7 @@ const OledClockEdit = ((props) => {
                 <Box m={2}>
                     {device.onSwitchButton === 0 ? (
                         <SettingDelete aria-label="delete" fontSize="large"
-                                    onClick={handleDelete(state, setState, device.id)}>
+                                       onClick={handleDelete(state, setState, device.id)}>
                             <Delete fontSize="inherit"/>
                         </SettingDelete>
                     ) : (<div/>)

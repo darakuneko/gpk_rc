@@ -1,9 +1,12 @@
-const {app, BrowserWindow, ipcMain, Tray, Menu} = require("electron")
-const ActiveWindow = require('@paymoapp/active-window')
-
-const {start, stop, close, writeCommand, connect, isOledOn, gpkRCVersion, getKBDList, deviceId} = require(`${__dirname}/qmkrcd`)
-const dayjs = require('dayjs')
-const Store = require("electron-store")
+import { app, BrowserWindow, ipcMain, Tray, Menu } from 'electron'
+import ActiveWindow from '@paymoapp/active-window'
+import dayjs from 'dayjs'
+import Store from 'electron-store'
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { start, stop, close, writeCommand, getConnect, getIsOledOn, getGpkRCVersion, getKBDList, deviceId } from './qmkrcd.js'
 
 ActiveWindow.default.initialize()
 
@@ -33,8 +36,15 @@ const createWindow = () => {
     mainWindow.on('close', (event) => {
         if (!app.isQuiting) {
             mainWindowHide(event, mainWindow)
+            return false
+        } else {
+            try {
+                app.quit()
+            } catch (e) {
+                console.log(e)
+                process.exit(1)
+            }
         }
-        return false
     })
 }
 
@@ -63,7 +73,7 @@ app.on('ready', () => {
             click: () => {
                 app.isQuiting = true
                 close()
-                app.quit()
+                mainWindow.close()
             }
         }
     ]))
@@ -116,7 +126,7 @@ ipcMain.on("onWindowShow", async () => {
 
 const sleep = async (msec) => new Promise(resolve => setTimeout(resolve, msec))
 
-const  commandId = (device) => gpkRCVersion(device) === 0 ? {
+const  commandId = (device) => getGpkRCVersion(device) === 0 ? {
     oledWrite: 23,
     switchLayer:  34,
     setOledState: 36,
@@ -137,12 +147,12 @@ ipcMain.handle('start', async (event,device) => {
 ipcMain.handle('stop', async (event, device) => {
     await stop(device)
 })
-ipcMain.handle('getKBDList', async (event) => await getKBDList())
-ipcMain.handle('connect', async (event, id) => await connect(id))
+ipcMain.handle('getKBDList',  (event) => getKBDList())
+ipcMain.handle('connect',  (event, id) => getConnect(id))
 ipcMain.handle('switchLayer', async (event, obj) => {
     await writeCommand(obj.device, {id: commandId(obj.device).switchLayer, data: [obj.n]})
 })
-ipcMain.handle('isOledOn', async (event) => await isOledOn())
+ipcMain.handle('isOledOn', (event) => getIsOledOn())
 ipcMain.handle('setOledState', async (event, device) => {
     await writeCommand(device, {id: commandId(device).setOledState})
     await sleep(300)

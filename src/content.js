@@ -1,17 +1,14 @@
-import React, {  useEffect, useRef, useState } from 'react'
-import Layer from "./renderer/layer"
-import ActiveWindow from "./renderer/activeWindow"
-import OledClock from "./renderer/oledClock"
-import KeyboardList from "./renderer/keyboardList"
-import { css } from "@emotion/react";
+import React, {useEffect, useRef, useState} from 'react'
+import Layer from "./renderer/layer.js"
+import ActiveWindow from "./renderer/activeWindow.js"
+import OledClock from "./renderer/oledClock.js"
+import KeyboardList from "./renderer/keyboardList.js"
+import {css} from "@emotion/react";
 
-import Box from "@mui/material/Box"
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
+import {Box, Tab, Tabs} from "@mui/material"
+import {useStateContext} from "./context.js"
 
 const {api} = window
-
-import {useStateContext} from "./context"
 
 const style = css`paddingTop: "40px"`;
 

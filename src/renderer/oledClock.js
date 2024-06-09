@@ -1,11 +1,11 @@
 import React from "react";
 
-import {SettingsPrecautionary, SettingsTitle } from "../style";
-import Paper from "@mui/material/Paper";
-import OledClockEdit from "./oledClockEdit";
+import {SettingsPrecautionary, SettingsTitle } from "../style.js";
+import {Paper} from "@mui/material";
+import OledClockEdit from "./oledClockEdit.js";
 
-import {useStateContext} from "../context";
-import CommonConnectDevice from "./commonConnectDevice";
+import {useStateContext} from "../context.js";
+import CommonConnectDevice from "./commonConnectDevice.js";
 
 const {api} = window
 

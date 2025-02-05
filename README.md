@@ -34,9 +34,10 @@ linux
 yarn dist:linux
 ```
 
-### Use Vial
+### To use this application
 https://github.com/darakuneko/vial-qmk/tree/gpk_rc    
-use gpk_rc branch   
+Build firmware using the gpk_rc branch.
+In doing so, add GPKRC_ENABLE to rules.mk.
 
 rules.mk  
 ```GPKRC_ENABLE = yes```

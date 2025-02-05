@@ -8,7 +8,7 @@ After selecting the application you want to use, GPK RC selection list will disp
 
 You can set it to use different layers for each application.
 
-## Vial Remote Controller Application
+## Remote Controller Application
 
 - Automatic layer switching based on application or OS
 - Write time to OLED (write to the last line)

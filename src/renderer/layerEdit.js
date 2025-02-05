@@ -68,7 +68,7 @@ const LayerEdit = ((props) => {
                         variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "manufacturer")}
                         defaultValue={device.manufacturer}
-                        InputProps={{readOnly: true}}/>
+                        slotProps={{ input: { readOnly: true } }} />
                 </Box>
                 <Box m={2}>
                     <TextField
@@ -76,7 +76,7 @@ const LayerEdit = ((props) => {
                         variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "product")}
                         defaultValue={device.product}
-                        InputProps={{readOnly: true}}/>
+                        slotProps={{ input: { readOnly: true } }} />
                 </Box>
                 <Box m={2}>
                     <TextField
@@ -84,7 +84,7 @@ const LayerEdit = ((props) => {
                         variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "vendorId")}
                         defaultValue={toHex(device.vendorId)}
-                        InputProps={{readOnly: true}}/>
+                        slotProps={{ input: { readOnly: true } }} />
                 </Box>
                 <Box m={2}>
                     <TextField
@@ -92,7 +92,7 @@ const LayerEdit = ((props) => {
                         variant={"standard"}
                         onChange={handleTextChange(state, setState, device.id, "productId")}
                         defaultValue={toHex(device.productId)}
-                        InputProps={{readOnly: true}}/>
+                        slotProps={{ input: { readOnly: true } }} />
                 </Box>
                 <Box m={2}>
                     {device.onSwitchButton === 0 ? (
@@ -128,12 +128,21 @@ const LayerEdit = ((props) => {
                                     </Select>
                                 </SettingLayerInput>
                                 <Box m={2}>
-                                    <SettingLayerAdd
+                                    <Select
                                         label="application"
                                         variant="filled"
-                                        onChange={handleTextChange(state, setState, device.id, "layer_name", l.layer, i)}
                                         value={l.name}
-                                    />
+                                        sx={{ width: 400 }}
+                                        onChange={handleTextChange(state, setState, device.id, "layer_name", l.layer, i)}
+                                        required>
+                                        {[l.name,...state.activeWindow].filter(v => v)
+                                            .map((appName) =>
+                                            (<MenuItem
+                                                key={`app-${appName}`}
+                                                value={appName}
+                                            >{appName}</MenuItem>)
+                                        )}
+                                    </Select>
                                 </Box>
                                 <Box m={2}>
                                     <SettingDelete aria-label="delete" fontSize="large"

@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react'
 import Layer from "./renderer/layer.js"
-import ActiveWindow from "./renderer/activeWindow.js"
 import OledClock from "./renderer/oledClock.js"
 import KeyboardList from "./renderer/keyboardList.js"
 import {css} from "@emotion/react";
@@ -94,14 +93,12 @@ const Content = () => {
                 <Tabs value={tab} onChange={handleChange} aria-label="basic tabs">
                     <Tab label="Auto Switch Layer" />
                     <Tab label="Oled Clock" />
-                    <Tab label="View Active Window" />
                     <Tab label="Registerable Keyboard List" />
                 </Tabs>
             </Box>
             {tab === 0 && <Layer/>}
             {tab === 1 && <OledClock />}
-            {tab === 2 && <ActiveWindow />}
-            {tab === 3 && <KeyboardList />}
+            {tab === 2 && <KeyboardList />}
         </div>
     )
 }

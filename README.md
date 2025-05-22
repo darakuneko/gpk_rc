@@ -1,6 +1,6 @@
 # Notice
 This project has been archived and is no longer maintained.   
-successor project here: [GPK Utility](https://github.com/darakuneko/gpk-utility)　　
+successor project here: [GPK Utility](https://github.com/darakuneko/gpk-utility)   
 Please be advised that the protocol is not compatible with this project, and a rebuild will be required.
 
 # GPK RC
